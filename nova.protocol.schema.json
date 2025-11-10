@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chrishicks.ca/schemas/nova.protocol.schema.json",
+  "title": "NOVA Protocol",
+  "type": "object",
+  "required": ["version", "interfaces"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "interfaces": {
+      "type": "object",
+      "required": ["IMemoryCompressor", "IRetriever"],
+      "additionalProperties": false,
+      "properties": {
+        "IMemoryCompressor": {
+          "type": "object",
+          "required": ["signature"],
+          "additionalProperties": false,
+          "properties": {
+            "signature": {
+              "type": "string"
+            }
+          }
+        },
+        "IRetriever": {
+          "type": "object",
+          "required": ["signature"],
+          "additionalProperties": false,
+          "properties": {
+            "signature": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "quoteMaxWords": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 25
+        }
+      }
+    }
+  },
+  "$defs": {
+    "persona": {
+      "type": "object",
+      "required": ["name", "summary"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "summary": { "type": "string" },
+        "tone": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "audience": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "ritual": {
+      "type": "object",
+      "required": ["phase", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "phase": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    }
+  }
+}

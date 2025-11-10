@@ -1,0 +1,38 @@
+{
+  "capabilities": {
+    "memoryCompressors": [
+      {
+        "name": "ocm_image_ocr",
+        "requires": ["visionTokens", "externalOCR"]
+      },
+      {
+        "name": "raw_text_pass",
+        "requires": ["textOnly"]
+      }
+    ],
+    "ocrEngines": [
+      {
+        "name": "unavailable_ocr",
+        "available": false
+      }
+    ]
+  },
+  "platform": {
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "visionTokensSupported": false
+  },
+  "bindings": {
+    "IMemoryCompressor": "ocm_image_ocr",
+    "IRetriever": "vector_guardian_v1"
+  },
+  "fallbacks": {
+    "IMemoryCompressor": ["raw_text_pass"]
+  },
+  "health": {
+    "ocm_image_ocr": {
+      "lastCER": null,
+      "lastTested": null
+    }
+  }
+}
