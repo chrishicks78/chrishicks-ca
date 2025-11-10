@@ -5,7 +5,29 @@
   "type": "object",
   "required": ["capabilities", "platform", "bindings"],
   "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "patternProperties": {
+    "^x-": {
+      "type": ["string", "number", "boolean", "object", "array", "null"]
+    }
+  },
   "properties": {
+    "$schema": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string" },
+        "date": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultMemory": { "enum": ["text-first", "ocm-first"] }
+      }
+    },
     "capabilities": {
       "type": "object",
       "required": ["memoryCompressors"],
@@ -85,6 +107,20 @@
           "lastTested": { "type": ["string", "null"], "format": "date-time" }
         },
         "additionalProperties": false
+      }
+    },
+    "healthChecks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["test", "onFailure"],
+        "additionalProperties": false,
+        "properties": {
+          "test": { "type": "string" },
+          "intervalSeconds": { "type": ["integer", "null"], "minimum": 1 },
+          "onFailure": { "enum": ["switchToFallback", "promoteToPrimary", "degrade", "halt"] },
+          "onSuccess": { "enum": ["promoteToPrimary", "log"] }
+        }
       }
     }
   }

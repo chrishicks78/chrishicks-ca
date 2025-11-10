@@ -1,4 +1,5 @@
 {
+  "$schema": "https://chrishicks.ca/schemas/nova.instance.schema.json",
   "id": "nova-chris-v1",
   "version": "1.0.0",
   "name": "Nova Guardian Persona",

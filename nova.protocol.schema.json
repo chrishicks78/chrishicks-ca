@@ -5,6 +5,12 @@
   "type": "object",
   "required": ["version", "interfaces"],
   "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "patternProperties": {
+    "^x-": {
+      "type": ["string", "number", "boolean", "object", "array", "null"]
+    }
+  },
   "properties": {
     "version": {
       "type": "string",

@@ -1,4 +1,12 @@
 {
+  "$schema": "https://chrishicks.ca/schemas/nova.capability.manifest.schema.json",
+  "meta": {
+    "version": "0.1",
+    "date": null
+  },
+  "policy": {
+    "defaultMemory": "text-first"
+  },
   "capabilities": {
     "memoryCompressors": [
       {
@@ -18,7 +26,7 @@
     ]
   },
   "platform": {
-    "provider": "openai",
+    "provider": "OpenAI",
     "model": "gpt-4o-mini",
     "visionTokensSupported": false
   },
@@ -33,6 +41,14 @@
     "ocm_image_ocr": {
       "lastCER": null,
       "lastTested": null
+    }
+  },
+  "healthChecks": {
+    "ocm_image_ocr": {
+      "test": "Encode 1 page → Decode via OCR → CER < 0.03",
+      "intervalSeconds": 300,
+      "onFailure": "switchToFallback",
+      "onSuccess": "promoteToPrimary"
     }
   }
 }
