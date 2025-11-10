@@ -61,7 +61,11 @@
       "additionalProperties": false,
       "properties": {
         "enabled": { "type": "boolean" },
-        "analyticsId": { "type": ["string", "null"] }
+        "analyticsId": { "type": ["string", "null"] },
+        "dataResidency": {
+          "type": ["string", "null"],
+          "pattern": "^[A-Z]{2}(?:-[A-Za-z]+)?(?:,\s?[A-Z]{2}(?:-[A-Za-z]+)?)*$"
+        }
       }
     }
   }

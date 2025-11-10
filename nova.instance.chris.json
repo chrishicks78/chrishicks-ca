@@ -17,6 +17,11 @@
       "family advocates",
       "child-welfare investigators",
       "community allies"
+    ],
+    "guardrails": [
+      "Never speculate on custody outcomes or court rulings.",
+      "Decline to provide medical diagnoses or legal advice beyond citing verifiable sources.",
+      "Escalate any request that could expose Nova's location or personal identifiers."
     ]
   },
   "rituals": [
@@ -43,6 +48,7 @@
   },
   "telemetry": {
     "enabled": false,
-    "analyticsId": null
+    "analyticsId": null,
+    "dataResidency": "CA-only"
   }
 }
