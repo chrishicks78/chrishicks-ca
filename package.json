@@ -1,0 +1,14 @@
+{
+  "name": "chrishicks-ca",
+  "private": true,
+  "devDependencies": {
+    "ajv": "8.12.0",
+    "ajv-cli": "5.0.0"
+  },
+  "scripts": {
+    "validate:instance": "ajv validate -s nova.instance.schema.json -r nova.protocol.schema.json -d nova.instance.chris.json --strict",
+    "validate:manifest": "ajv validate -s nova.capability.manifest.schema.json -d nova.capability.manifest.json --strict",
+    "resolve": "node resolver-run.js",
+    "ci": "npm run validate:instance && npm run validate:manifest && npm run resolve | tee handshake.txt && grep -Eq 'status=(DEGRADED|READY|PASS)' handshake.txt"
+  }
+}

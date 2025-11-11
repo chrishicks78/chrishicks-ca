@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chrishicks.ca/schemas/nova.capability.manifest.schema.json",
+  "title": "NOVA Capability Manifest",
+  "type": "object",
+  "required": ["capabilities", "platform", "bindings"],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "patternProperties": {
+    "^x-": {
+      "type": ["string", "number", "boolean", "object", "array", "null"]
+    }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "protocolRange": {
+          "type": "string",
+          "pattern": "^(?:\^|~)?[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+        },
+        "date": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultMemory": { "enum": ["text-first", "ocm-first"] }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "required": ["memoryCompressors"],
+      "additionalProperties": false,
+      "properties": {
+        "memoryCompressors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "requires": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["visionTokens", "externalOCR", "textOnly"]
+                },
+                "uniqueItems": true,
+                "default": []
+              }
+            }
+          }
+        },
+        "ocrEngines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "available"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "available": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "platform": {
+      "type": "object",
+      "required": ["provider", "model", "visionTokensSupported"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string" },
+        "model": { "type": "string" },
+        "visionTokensSupported": { "type": "boolean" }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "required": ["IMemoryCompressor"],
+      "additionalProperties": false,
+      "properties": {
+        "IMemoryCompressor": { "type": "string" },
+        "IRetriever": { "type": ["string", "null"] }
+      }
+    },
+    "fallbacks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "IMemoryCompressor": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "lastCER": { "type": ["number", "null"] },
+          "lastTested": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "healthChecks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["test", "onFailure"],
+        "additionalProperties": false,
+        "properties": {
+          "test": { "type": "string" },
+          "intervalSeconds": { "type": ["integer", "null"], "minimum": 1 },
+          "onFailure": { "enum": ["switchToFallback", "promoteToPrimary", "degrade", "halt"] },
+          "onSuccess": { "enum": ["promoteToPrimary", "log"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://chrishicks.ca/schemas/nova.capability.manifest.schema.json",
+  "meta": {
+    "version": "0.1.0",
+    "protocolRange": "^2.2",
+    "date": null
+  },
+  "policy": {
+    "defaultMemory": "text-first"
+  },
+  "capabilities": {
+    "memoryCompressors": [
+      {
+        "name": "ocm_image_ocr",
+        "requires": ["visionTokens", "externalOCR"]
+      },
+      {
+        "name": "raw_text_pass",
+        "requires": ["textOnly"]
+      }
+    ],
+    "ocrEngines": [
+      {
+        "name": "unavailable_ocr",
+        "available": false
+      }
+    ]
+  },
+  "platform": {
+    "provider": "OpenAI",
+    "model": "gpt-4o-mini",
+    "visionTokensSupported": false
+  },
+  "bindings": {
+    "IMemoryCompressor": "ocm_image_ocr",
+    "IRetriever": "vector_guardian_v1"
+  },
+  "fallbacks": {
+    "IMemoryCompressor": ["raw_text_pass"]
+  },
+  "health": {
+    "ocm_image_ocr": {
+      "lastCER": null,
+      "lastTested": null
+    }
+  },
+  "healthChecks": {
+    "ocm_image_ocr": {
+      "test": "Encode 1 page → Decode via OCR → CER < 0.03",
+      "intervalSeconds": 300,
+      "onFailure": "switchToFallback",
+      "onSuccess": "promoteToPrimary"
+    }
+  }
+}
