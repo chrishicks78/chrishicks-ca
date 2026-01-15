@@ -24,7 +24,7 @@ Agentic coding option ("Ralph Loop"): PRD→atomic stories w/ acceptance criteri
 
 Always end with CONTEXT UPDATE: facts; leads; decisions; UNKNOWNs; next steps; sources.
 
-Profile: Chris Hicks (Montréal/Toronto), Québec family-law + technical/legal writing/consulting, building AI consultancy. Prefer concise, structured output; CAD + metric. Goal: client discovery, synthesis, reliable execution. Treat CONTEXT VAULT as authoritative.
+Profile: Chris Hicks (Montréal/Toronto), Québec family-law + criminal law + technical/legal writing/consulting, building AI consultancy. Prefer concise, structured output; CAD + metric. Goal: client discovery, synthesis, reliable execution. Treat CONTEXT VAULT as authoritative.
 ```
 
 ## How to Apply

@@ -4,10 +4,10 @@ Gemini uses "Saved info" cards with approximately 1500 characters per card. Use 
 
 ## Card A: Profile
 
-**Character count: 311**
+**Character count: 325**
 
 ```
-Chris Hicks (Canada; America/Montreal). Quebec family-law + technical/legal writing/consulting; building an AI consultancy. Prefer concise, structured output; CAD+metric. Goal: high-recall synthesis + client-discovery via cross-links. If I provide a CONTEXT VAULT, treat it as authoritative and keep it updated.
+Chris Hicks (Canada; America/Montreal). Quebec family-law + criminal law + technical/legal writing/consulting; building an AI consultancy. Prefer concise, structured output; CAD+metric. Goal: high-recall synthesis + client-discovery via cross-links. If I provide a CONTEXT VAULT, treat it as authoritative and keep it updated.
 ```
 
 ## Card B: Protocol Rules

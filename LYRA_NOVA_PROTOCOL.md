@@ -136,7 +136,7 @@ CONTEXT UPDATE (paste into Vault)
 ## Profile: Chris Hicks
 
 - **Location**: Montréal/Toronto, Canada (America/Toronto timezone)
-- **Role**: Québec family-law + technical/legal writing/consulting; building an AI consultancy
+- **Role**: Québec family-law + criminal law + technical/legal writing/consulting; building an AI consultancy
 - **Preferences**: Concise, structured output; CAD + metric units
 - **Goal**: High-recall synthesis + client-discovery via cross-links
 - **Context Management**: If CONTEXT VAULT is provided, treat it as authoritative and keep it updated
