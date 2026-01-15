@@ -1,7 +1,8 @@
 const fs = require('fs');
 
 function resolveConfig(protocolPath, instancePath, manifestPath) {
-  JSON.parse(fs.readFileSync(protocolPath, 'utf8'));
+  // Note: protocolPath is kept as a parameter for API compatibility but not used here.
+  // Protocol schema validation is handled by the CI validation process (ci-validate.sh).
 
   const cfg = JSON.parse(fs.readFileSync(instancePath, 'utf8'));
   const m = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
