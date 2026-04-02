@@ -1,11 +1,15 @@
 {
   "name": "chrishicks-ca",
   "private": true,
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  },
   "devDependencies": {
     "ajv": "8.12.0",
     "ajv-cli": "5.0.0"
   },
   "scripts": {
+    "generate:presentation": "node generate-presentation.js",
     "validate:instance": "ajv validate -s nova.instance.schema.json -r nova.protocol.schema.json -d nova.instance.chris.json --strict",
     "validate:manifest": "ajv validate -s nova.capability.manifest.schema.json -d nova.capability.manifest.json --strict",
     "resolve": "node resolver-run.js",
