@@ -1,0 +1,98 @@
+import Dexie, { type EntityTable } from 'dexie'
+import type {
+  InventoryItem,
+  Delivery,
+  SpecialCustomerRequest,
+  DailySales,
+  UserProfile,
+  Supplier,
+} from './types'
+
+const db = new Dexie('LydiasDepanneurOS') as Dexie & {
+  users: EntityTable<UserProfile, 'id'>
+  inventory: EntityTable<InventoryItem, 'id'>
+  deliveries: EntityTable<Delivery, 'id'>
+  customers: EntityTable<SpecialCustomerRequest, 'id'>
+  sales: EntityTable<DailySales, 'id'>
+  suppliers: EntityTable<Supplier, 'id'>
+}
+
+db.version(1).stores({
+  users: 'id, role, name',
+  inventory: '++id, name, category, barcode, supplierId',
+  deliveries: '++id, supplierId, expectedDate, status',
+  customers: '++id, customerName, status, dateRequested',
+  sales: '++id, date, recordedBy',
+  suppliers: 'id, name',
+})
+
+// Seed default users on first run
+export async function ensureDefaults() {
+  const userCount = await db.users.count()
+  if (userCount === 0) {
+    await db.users.bulkAdd([
+      {
+        id: 'defei',
+        name: 'Defei Chen',
+        role: 'owner',
+        locale: 'en',
+        onboarded: false,
+        createdAt: Date.now(),
+      },
+      {
+        id: 'cedric',
+        name: 'Cedric',
+        role: 'employee',
+        locale: 'fr',
+        onboarded: false,
+        createdAt: Date.now(),
+      },
+    ])
+  }
+
+  const supplierCount = await db.suppliers.count()
+  if (supplierCount === 0) {
+    await db.suppliers.bulkAdd([
+      {
+        id: 'molson',
+        name: 'Molson / Brasseurs',
+        deliveryDays: [1, 4],
+        deliveryTime: '08:00',
+        categories: ['beer'],
+        notes: 'Beer distributor — call by Sunday for Monday delivery',
+      },
+      {
+        id: 'pepsi',
+        name: 'PepsiCo',
+        deliveryDays: [2, 5],
+        deliveryTime: '09:00',
+        categories: ['soft-drinks'],
+        notes: 'Soft drinks, chips',
+      },
+      {
+        id: 'costco',
+        name: 'Costco Run',
+        deliveryDays: [0, 3],
+        categories: ['snacks', 'dairy', 'household', 'other'],
+        notes: 'Self-pickup — bulk items, paper products, misc',
+      },
+      {
+        id: 'bread',
+        name: 'Boulangerie / Bread',
+        deliveryDays: [1, 3, 5],
+        deliveryTime: '06:30',
+        categories: ['bread'],
+      },
+      {
+        id: 'loto',
+        name: 'Loto-Québec',
+        deliveryDays: [2],
+        deliveryTime: '10:00',
+        categories: ['lottery'],
+        notes: 'Terminal supplies, ticket stock',
+      },
+    ])
+  }
+}
+
+export { db }
