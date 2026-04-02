@@ -3,7 +3,6 @@ name: Deploy Dépanneur OS
 on:
   push:
     branches: [main, 'claude/*']
-    paths: ['depanneur-os/**']
   workflow_dispatch:
 
 permissions:
@@ -37,7 +36,6 @@ jobs:
         run: |
           mkdir -p _site/depanneur-os
           cp index.html _site/
-          cp CNAME _site/
           cp -r depanneur-os/dist/* _site/depanneur-os/
 
       - uses: actions/upload-pages-artifact@v3

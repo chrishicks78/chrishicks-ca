@@ -1,5 +1,5 @@
 const CACHE = 'lydias-v1'
-const PRECACHE = ['/depanneur-os/']
+const PRECACHE = ['/chrishicks-ca/depanneur-os/']
 
 self.addEventListener('install', (e) => {
   e.waitUntil(

@@ -11,6 +11,6 @@ createRoot(document.getElementById('root')!).render(
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/depanneur-os/sw.js').catch(() => {})
+    navigator.serviceWorker.register('/chrishicks-ca/depanneur-os/sw.js').catch(() => {})
   })
 }

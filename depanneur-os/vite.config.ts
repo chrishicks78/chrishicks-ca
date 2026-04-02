@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/depanneur-os/',
+  base: '/chrishicks-ca/depanneur-os/',
   build: {
     outDir: 'dist',
     sourcemap: false,
