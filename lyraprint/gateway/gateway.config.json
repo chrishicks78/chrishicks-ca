@@ -1,0 +1,88 @@
+{
+  "$schema": "https://chrishicks.ca/schemas/lyraprint.gateway.schema.json",
+  "version": "0.1.0",
+  "name": "LyraPrint Gateway",
+  "description": "OpenClaw Gateway configuration for the LyraPrint ecosystem. Routes customer messages through NOVA Bridge, dispatches to skills, manages channels.",
+
+  "server": {
+    "host": "127.0.0.1",
+    "port": 18789,
+    "cors": {
+      "origins": ["https://chrishicks.ca"],
+      "methods": ["GET", "POST", "PUT"]
+    }
+  },
+
+  "auth": {
+    "type": "bearer",
+    "tokenEnvVar": "LYRAPRINT_GATEWAY_TOKEN"
+  },
+
+  "llm": {
+    "provider": "anthropic",
+    "model": "claude-opus-4-6",
+    "maxTokens": 4096,
+    "temperature": 0.3,
+    "systemPromptSource": "nova-bridge"
+  },
+
+  "channels": {
+    "whatsapp": {
+      "enabled": true,
+      "provider": "whatsapp-business",
+      "phoneEnvVar": "WHATSAPP_PHONE_ID",
+      "tokenEnvVar": "WHATSAPP_TOKEN"
+    },
+    "telegram": {
+      "enabled": true,
+      "tokenEnvVar": "TELEGRAM_BOT_TOKEN"
+    },
+    "discord": {
+      "enabled": true,
+      "tokenEnvVar": "DISCORD_BOT_TOKEN",
+      "guildId": null
+    },
+    "slack": {
+      "enabled": false,
+      "tokenEnvVar": "SLACK_BOT_TOKEN"
+    },
+    "web": {
+      "enabled": true,
+      "endpoint": "/api/chat"
+    }
+  },
+
+  "skills": {
+    "nova-bridge": {
+      "path": "../nova-bridge/SKILL.md",
+      "priority": 0,
+      "middleware": true
+    },
+    "lyraprint": {
+      "path": "../openclaw-skill/SKILL.md",
+      "priority": 1
+    }
+  },
+
+  "database": {
+    "driver": "sqlite",
+    "path": "./data/lyraprint.db"
+  },
+
+  "storage": {
+    "uploads": "./data/uploads/",
+    "maxFileSizeMB": 50,
+    "allowedTypes": ["application/pdf", "image/png", "image/svg+xml", "image/tiff", "application/postscript"]
+  },
+
+  "nova": {
+    "instancePath": "../../nova.instance.chris.json",
+    "manifestPath": "../../nova.capability.manifest.json",
+    "protocolPath": "../../nova.protocol.schema.json"
+  },
+
+  "telemetry": {
+    "enabled": false,
+    "dataResidency": "CA-only"
+  }
+}

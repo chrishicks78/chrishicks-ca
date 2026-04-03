@@ -2,41 +2,49 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://chrishicks.ca/schemas/nova.protocol.schema.json",
   "title": "NOVA Protocol",
+  "description": "Core protocol schema for the NOVA Guardian System v2.2.1. Defines interface contracts (IMemoryCompressor, IRetriever), compliance boundaries, and reusable persona/ritual definitions used by all NOVA instances.",
   "type": "object",
   "required": ["version", "interfaces"],
   "additionalProperties": false,
   "unevaluatedProperties": false,
   "patternProperties": {
     "^x-": {
+      "description": "Vendor extension fields (x-prefixed) for custom metadata.",
       "type": ["string", "number", "boolean", "object", "array", "null"]
     }
   },
   "properties": {
     "version": {
+      "description": "Semantic version of the NOVA protocol (e.g. '2.2.1').",
       "type": "string",
       "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$"
     },
     "interfaces": {
+      "description": "Required interface contracts that platform capabilities must implement.",
       "type": "object",
       "required": ["IMemoryCompressor", "IRetriever"],
       "additionalProperties": false,
       "properties": {
         "IMemoryCompressor": {
+          "description": "Contract for document encoding/compression (OCR or text-pass).",
           "type": "object",
           "required": ["signature"],
           "additionalProperties": false,
           "properties": {
             "signature": {
+              "description": "Function signature string for the compressor implementation.",
               "type": "string"
             }
           }
         },
         "IRetriever": {
+          "description": "Contract for vector-based document retrieval.",
           "type": "object",
           "required": ["signature"],
           "additionalProperties": false,
           "properties": {
             "signature": {
+              "description": "Function signature string for the retriever implementation.",
               "type": "string"
             }
           }
@@ -44,10 +52,12 @@
       }
     },
     "compliance": {
+      "description": "Content compliance boundaries for generated output.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "quoteMaxWords": {
+          "description": "Maximum words allowed in any single quoted passage.",
           "type": "integer",
           "minimum": 1,
           "maximum": 25
@@ -57,23 +67,27 @@
   },
   "$defs": {
     "persona": {
+      "description": "Persona definition — identity, tone, audience targeting, and safety guardrails.",
       "type": "object",
       "required": ["name", "summary"],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string" },
-        "summary": { "type": "string" },
+        "name": { "description": "Display name of the persona.", "type": "string" },
+        "summary": { "description": "One-line mission statement.", "type": "string" },
         "tone": {
+          "description": "Voice attributes (e.g. 'calm', 'evidence-focused').",
           "type": "array",
           "items": { "type": "string" },
           "minItems": 1
         },
         "audience": {
+          "description": "Primary audience segments this persona addresses.",
           "type": "array",
           "items": { "type": "string" },
           "minItems": 1
         },
         "guardrails": {
+          "description": "Hard safety constraints the persona must never violate.",
           "type": "array",
           "items": { "type": "string" },
           "minItems": 1,
@@ -82,12 +96,13 @@
       }
     },
     "ritual": {
+      "description": "Structured interaction phase (intake, reflection, etc.).",
       "type": "object",
       "required": ["phase", "description"],
       "additionalProperties": false,
       "properties": {
-        "phase": { "type": "string" },
-        "description": { "type": "string" }
+        "phase": { "description": "Phase identifier (e.g. 'intake', 'reflection').", "type": "string" },
+        "description": { "description": "What the persona does during this phase.", "type": "string" }
       }
     }
   }

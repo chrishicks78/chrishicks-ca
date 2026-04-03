@@ -1,4 +1,4 @@
-const CACHE = 'lydias-v1'
+const CACHE = 'lydias-v2'
 const PRECACHE = ['/chrishicks-ca/depanneur-os/']
 
 self.addEventListener('install', (e) => {
@@ -22,8 +22,10 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(e.request)
       .then((res) => {
-        const clone = res.clone()
-        caches.open(CACHE).then((cache) => cache.put(e.request, clone))
+        if (res.ok) {
+          const clone = res.clone()
+          caches.open(CACHE).then((cache) => cache.put(e.request, clone))
+        }
         return res
       })
       .catch(() => caches.match(e.request))

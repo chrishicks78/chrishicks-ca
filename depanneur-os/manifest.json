@@ -1,13 +1,14 @@
 {
   "name": "Lydia's Dépanneur OS",
   "short_name": "Lydia's",
-  "description": "Corner store management system — NDG, Montreal",
+  "description": "Corner store management system — inventory, compliance, and financials for Lydia's Dépanneur, NDG Montreal.",
   "start_url": "/chrishicks-ca/depanneur-os/",
   "scope": "/chrishicks-ca/depanneur-os/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "orientation": "any",
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "favicon.svg",
