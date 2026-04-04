@@ -1,4 +1,7 @@
 #!/bin/bash
+# Local CI script with graceful fallbacks for environments without npm/ajv.
+# Validates JSON schemas, runs the resolver, and checks the handshake output.
+# GitHub Actions uses `npm run ci` (package.json) instead of this script.
 set -e
 
 echo "1) Installing (if available)…"
