@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chris Hicks advocates for his daughter Nova's rights and wellbeing. A platform documenting a father's fight for parental justice.">
+    <meta property="og:title" content="Chris Hicks – A Father's Fight">
+    <meta property="og:description" content="A father's fight for parental rights, justice, and his daughter Nova's wellbeing.">
+    <meta property="og:type" content="website">
     <title>Chris Hicks – A Father's Fight</title>
     <style>
         body {
@@ -55,6 +59,19 @@
             color: #ffdd00;
             text-decoration: none;
         }
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #003366;
+            color: #fff;
+            padding: 8px 16px;
+            z-index: 100;
+            transition: top 0.2s;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
         @media (max-width: 600px) {
             header h1 {
                 font-size: 2em;
@@ -66,11 +83,12 @@
     </style>
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header>
         <h1>Chris Hicks – A Father's Fight</h1>
         <p>Seeking justice and love in the face of adversity</p>
     </header>
-    <main>
+    <main id="main">
         <section>
             <h2>Welcome</h2>
             <p>Thank you for visiting my site. My name is Chris Hicks, and this is a platform where I share my ongoing struggle to be an active and loving father in my daughter Nova's life. This journey has been marred by systemic obstacles and deeply troubling behaviours from those entrusted with her care.</p>
