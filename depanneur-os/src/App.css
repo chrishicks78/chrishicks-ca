@@ -173,7 +173,7 @@
   bottom: 0;
   width: var(--sidebar-width);
   padding: 20px 12px;
-  background: rgba(15, 23, 42, 0.85);
+  background: var(--sidebar-bg);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   border-right: 1px solid var(--border-glass);
@@ -516,7 +516,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--modal-overlay);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -812,7 +812,7 @@
     left: 0;
     right: 0;
     height: var(--bottombar-height);
-    background: rgba(15, 23, 42, 0.92);
+    background: var(--bottombar-bg);
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
     border-top: 1px solid var(--border-glass);

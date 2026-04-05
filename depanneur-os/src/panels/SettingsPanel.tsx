@@ -8,11 +8,13 @@ interface Props {
   setLocale: (l: Locale) => void
   soundtrack: { playing: boolean; volume: number; toggle: () => void; setVolume: (v: number) => void; play: () => void }
   pwa: { canInstall: boolean; installed: boolean; install: () => void }
+  theme: 'light' | 'dark'
+  onToggleTheme: () => void
   onToast: (msg: string, type?: 'info' | 'success' | 'warning' | 'error') => void
   onLogout: () => void
 }
 
-export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa, onToast, onLogout }: Props) {
+export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa, theme, onToggleTheme, onToast, onLogout }: Props) {
 
   async function handleExport() {
     const data = {
@@ -34,6 +36,38 @@ export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa
     onToast('Data exported', 'success')
   }
 
+  function handleImport() {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json'
+    input.onchange = async () => {
+      const file = input.files?.[0]
+      if (!file) return
+      try {
+        const text = await file.text()
+        const data = JSON.parse(text)
+        if (!data.inventory || !data.users || !data.suppliers) {
+          onToast('Invalid backup file', 'error')
+          return
+        }
+        if (!confirm('This will replace ALL current data. Continue?')) return
+        await db.delete()
+        await db.open()
+        if (data.users?.length) await db.users.bulkAdd(data.users)
+        if (data.inventory?.length) await db.inventory.bulkAdd(data.inventory)
+        if (data.deliveries?.length) await db.deliveries.bulkAdd(data.deliveries)
+        if (data.customers?.length) await db.customers.bulkAdd(data.customers)
+        if (data.sales?.length) await db.sales.bulkAdd(data.sales)
+        if (data.suppliers?.length) await db.suppliers.bulkAdd(data.suppliers)
+        onToast('Data imported successfully', 'success')
+        setTimeout(() => window.location.reload(), 1000)
+      } catch {
+        onToast('Failed to import data', 'error')
+      }
+    }
+    input.click()
+  }
+
   async function handleReset() {
     if (!confirm('This will delete ALL data. Are you sure?')) return
     await db.delete()
@@ -47,6 +81,16 @@ export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa
       </div>
 
       <div className="glass-card" style={{ marginBottom: 20 }}>
+        {/* Theme */}
+        <div className="setting-row">
+          <div>
+            <div className="setting-label">{t('settings.theme', locale)}</div>
+          </div>
+          <button className="btn btn-sm btn-secondary" onClick={onToggleTheme}>
+            {theme === 'dark' ? '☀️ ' + t('settings.theme.light', locale) : '🌙 ' + t('settings.theme.dark', locale)}
+          </button>
+        </div>
+
         {/* Language */}
         <div className="setting-row">
           <div>
@@ -114,6 +158,14 @@ export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa
           <div className="setting-label">{t('settings.export', locale)}</div>
           <button className="btn btn-sm btn-secondary" onClick={handleExport}>
             {t('settings.export', locale)}
+          </button>
+        </div>
+
+        {/* Import */}
+        <div className="setting-row">
+          <div className="setting-label">{t('settings.import', locale)}</div>
+          <button className="btn btn-sm btn-secondary" onClick={handleImport}>
+            {t('settings.import', locale)}
           </button>
         </div>
 

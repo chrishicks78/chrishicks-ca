@@ -541,6 +541,84 @@ const strings: Record<string, Record<Locale, string>> = {
     'zh-Hant': '重置所有數據',
   },
 
+  // Settings extras
+  'settings.theme': {
+    en: 'Theme',
+    fr: 'Thème',
+    'zh-Hans': '主题',
+    'zh-Hant': '主題',
+  },
+  'settings.theme.light': {
+    en: 'Light',
+    fr: 'Clair',
+    'zh-Hans': '浅色',
+    'zh-Hant': '淺色',
+  },
+  'settings.theme.dark': {
+    en: 'Dark',
+    fr: 'Sombre',
+    'zh-Hans': '深色',
+    'zh-Hant': '深色',
+  },
+  'settings.import': {
+    en: 'Import Data',
+    fr: 'Importer les données',
+    'zh-Hans': '导入数据',
+    'zh-Hant': '導入數據',
+  },
+
+  // Business Tips (Prophecy Breaker)
+  'tip.1': {
+    en: 'A broken fridge costs more than a repair. Warm drinks lose ~30% of impulse sales. Fix fast, earn faster.',
+    fr: 'Un frigo en panne coûte plus qu\'une réparation. Les boissons chaudes perdent ~30% des ventes impulsives.',
+    'zh-Hans': '坏冰柜的损失远超修理费。温热饮料会损失约30%的冲动消费。尽快修理，越快盈利。',
+    'zh-Hant': '壞冰櫃的損失遠超修理費。溫熱飲料會損失約30%的衝動消費。盡快修理，越快盈利。',
+  },
+  'tip.2': {
+    en: 'Track your top 10 sellers weekly. Stock what moves — cut what sits. Simple math, real money.',
+    fr: 'Suivez vos 10 meilleurs vendeurs chaque semaine. Stockez ce qui bouge — réduisez ce qui stagne.',
+    'zh-Hans': '每周追踪前10畅销品。多备畅销品，减少滞销品。简单计算，真金白银。',
+    'zh-Hant': '每週追蹤前10暢銷品。多備暢銷品，減少滯銷品。簡單計算，真金白銀。',
+  },
+  'tip.3': {
+    en: 'Good lighting = more customers. A well-lit store feels safer and more inviting. Worth every dollar.',
+    fr: 'Bon éclairage = plus de clients. Un magasin bien éclairé inspire confiance.',
+    'zh-Hans': '好的照明 = 更多顾客。明亮的店铺让人感觉更安全、更有吸引力。每一分钱都值得。',
+    'zh-Hant': '好的照明 = 更多顧客。明亮的店鋪讓人感覺更安全、更有吸引力。每一分錢都值得。',
+  },
+  'tip.4': {
+    en: 'Costco bulk buys save 15-25% on snacks and household items. Plan your runs to maximize savings.',
+    fr: 'Les achats en gros chez Costco économisent 15-25% sur les collations et produits ménagers.',
+    'zh-Hans': 'Costco批量采购零食和日用品可节省15-25%。计划好采购以最大化节省。',
+    'zh-Hant': 'Costco批量採購零食和日用品可節省15-25%。計劃好採購以最大化節省。',
+  },
+  'tip.5': {
+    en: 'Regular customers are your backbone. Fulfilling a special request builds loyalty that lasts years.',
+    fr: 'Les clients réguliers sont votre pilier. Satisfaire une demande spéciale fidélise pour des années.',
+    'zh-Hans': '老顾客是您的根基。满足特殊需求能建立持续多年的忠诚度。',
+    'zh-Hant': '老顧客是您的根基。滿足特殊需求能建立持續多年的忠誠度。',
+  },
+  'tip.6': {
+    en: 'NDG foot traffic peaks 4-7 PM. Make sure impulse items (snacks, cold drinks) are stocked and visible.',
+    fr: 'Le trafic piétonnier NDG culmine entre 16h-19h. Les achats impulsifs doivent être bien en vue.',
+    'zh-Hans': 'NDG人流高峰在下午4-7点。确保冲动消费品（零食、冷饮）库存充足且显眼。',
+    'zh-Hant': 'NDG人流高峰在下午4-7點。確保衝動消費品（零食、冷飲）庫存充足且顯眼。',
+  },
+  'overview.tip.title': {
+    en: 'Revenue Tip',
+    fr: 'Conseil revenu',
+    'zh-Hans': '营收建议',
+    'zh-Hant': '營收建議',
+  },
+
+  // Calendar export
+  'comply.export.calendar': {
+    en: 'Export to Calendar',
+    fr: 'Exporter au calendrier',
+    'zh-Hans': '导出到日历',
+    'zh-Hant': '導出到日曆',
+  },
+
   // Common
   'common.save': { en: 'Save', fr: 'Enregistrer', 'zh-Hans': '保存', 'zh-Hant': '保存' },
   'common.cancel': { en: 'Cancel', fr: 'Annuler', 'zh-Hans': '取消', 'zh-Hant': '取消' },

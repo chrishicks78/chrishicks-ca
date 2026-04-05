@@ -22,6 +22,13 @@ import CompliancePanel from './panels/CompliancePanel'
 import SettingsPanel from './panels/SettingsPanel'
 
 type Phase = 'splash' | 'user-select' | 'onboarding' | 'dashboard'
+type Theme = 'light' | 'dark'
+
+function getInitialTheme(): Theme {
+  const saved = localStorage.getItem('lydias-theme')
+  if (saved === 'light' || saved === 'dark') return saved
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+}
 
 const TAB_CONFIG: { id: DashboardTab; icon: string; labelKey: string; ownerOnly?: boolean }[] = [
   { id: 'overview', icon: '📊', labelKey: 'tab.overview' },
@@ -37,6 +44,17 @@ export default function App() {
   const [phase, setPhase] = useState<Phase>('splash')
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null)
   const [activeTab, setActiveTab] = useState<DashboardTab>('overview')
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme)
+
+  // Apply theme to document
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('lydias-theme', theme)
+  }, [theme])
+
+  const toggleTheme = useCallback(() => {
+    setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'))
+  }, [])
 
   const dbReady = useBootstrap()
   const { locale, setLocale } = useLocale()
@@ -175,6 +193,8 @@ export default function App() {
             setLocale={setLocale}
             soundtrack={soundtrack}
             pwa={pwa}
+            theme={theme}
+            onToggleTheme={toggleTheme}
             onToast={toast}
             onLogout={handleLogout}
           />
@@ -239,6 +259,14 @@ export default function App() {
         <div className="sidebar-user">
           <span className="dot" />
           <span>{currentUser?.name}</span>
+          <button
+            className="btn-icon"
+            style={{ marginLeft: 'auto' }}
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
         </div>
       </nav>
 

@@ -23,6 +23,10 @@ const ENCOURAGEMENTS = [
   'overview.encouragement.4',
 ]
 
+const BUSINESS_TIPS = [
+  'tip.1', 'tip.2', 'tip.3', 'tip.4', 'tip.5', 'tip.6',
+]
+
 export default function OverviewPanel({ locale, user, items, deliveries, requests, sales, onNavigate }: Props) {
   const hour = new Date().getHours()
   const greetingKey = hour < 12 ? 'overview.greeting.morning' : hour < 18 ? 'overview.greeting.afternoon' : 'overview.greeting.evening'
@@ -44,9 +48,12 @@ export default function OverviewPanel({ locale, user, items, deliveries, request
     return todaySales.reduce((sum, s) => sum + s.cashIn + s.cardIn - s.expenses, 0)
   }, [sales, today])
 
-  // Rotate encouragement based on day-of-month (deterministic per day)
-  const encouragementIndex = new Date().getDate() % ENCOURAGEMENTS.length
+  // Rotate encouragement and tip based on day-of-month (deterministic per day)
+  const dayOfMonth = new Date().getDate()
+  const encouragementIndex = dayOfMonth % ENCOURAGEMENTS.length
   const encouragement = t(ENCOURAGEMENTS[encouragementIndex], locale)
+  const tipIndex = dayOfMonth % BUSINESS_TIPS.length
+  const businessTip = t(BUSINESS_TIPS[tipIndex], locale)
 
   return (
     <div>
@@ -56,6 +63,17 @@ export default function OverviewPanel({ locale, user, items, deliveries, request
       </div>
 
       <div className="encouragement glass-card">{encouragement}</div>
+
+      {user.role === 'owner' && (
+        <div className="glass-card" style={{ marginBottom: 16, borderLeft: '3px solid var(--warning)', padding: '14px 20px' }}>
+          <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--warning)', marginBottom: 4 }}>
+            💡 {t('overview.tip.title', locale)}
+          </div>
+          <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+            {businessTip}
+          </div>
+        </div>
+      )}
 
       <div className="stat-grid">
         {user.role === 'owner' && (
