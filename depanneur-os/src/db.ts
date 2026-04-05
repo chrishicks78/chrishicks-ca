@@ -6,6 +6,7 @@ import type {
   DailySales,
   UserProfile,
   Supplier,
+  ComplianceItem,
 } from './types'
 
 const db = new Dexie('LydiasDepanneurOS') as Dexie & {
@@ -15,6 +16,7 @@ const db = new Dexie('LydiasDepanneurOS') as Dexie & {
   customers: EntityTable<SpecialCustomerRequest, 'id'>
   sales: EntityTable<DailySales, 'id'>
   suppliers: EntityTable<Supplier, 'id'>
+  compliance: EntityTable<ComplianceItem, 'id'>
 }
 
 db.version(1).stores({
@@ -30,6 +32,11 @@ db.version(1).stores({
 db.version(2).stores({}).upgrade(async (tx) => {
   const users = tx.table('users')
   await users.where('id').anyOf(['chris', 'cedric', 'employee-1']).delete()
+})
+
+// v3: add compliance tracking table
+db.version(3).stores({
+  compliance: 'id, status',
 })
 
 // Seed default users on first run
@@ -97,6 +104,17 @@ export async function ensureDefaults() {
         categories: ['lottery'],
         notes: 'Terminal supplies, ticket stock',
       },
+    ])
+  }
+  const complianceCount = await db.compliance.count()
+  if (complianceCount === 0) {
+    await db.compliance.bulkAdd([
+      { id: 'mapaq', name: 'MAPAQ Permit', icon: '🛡️', descKey: 'comply.mapaq', status: 'unknown' },
+      { id: 'hygiene', name: 'Hygiene Standards', icon: '🧼', descKey: 'comply.hygiene', status: 'unknown' },
+      { id: 'alcohol', name: 'Alcohol Permit (RACJ)', icon: '🍺', descKey: 'comply.alcohol', status: 'unknown' },
+      { id: 'grocery', name: 'Grocery Permit', icon: '🏪', descKey: 'comply.grocery', status: 'unknown' },
+      { id: 'loto', name: 'Loto-Québec License', icon: '🎰', descKey: 'comply.loto', status: 'unknown' },
+      { id: 'tobacco', name: 'Tobacco / QST', icon: '🚬', descKey: 'comply.tobacco', status: 'unknown' },
     ])
   }
 }

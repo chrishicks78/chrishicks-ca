@@ -6,6 +6,7 @@ import type {
   Delivery,
   SpecialCustomerRequest,
   DailySales,
+  ComplianceItem,
   Toast,
   Locale,
 } from './types'
@@ -180,91 +181,245 @@ export function useSales() {
     [reload],
   )
 
-  return { sales, add, reload }
+  const update = useCallback(
+    async (id: number, changes: Partial<DailySales>) => {
+      await db.sales.update(id, changes)
+      await reload()
+    },
+    [reload],
+  )
+
+  return { sales, add, update, reload }
 }
 
-/* ── Soundtrack (Web Audio API — no mp3 needed) ── */
-// Generates a gentle ambient lo-fi loop using oscillators and filters.
-// Must be started from a user gesture (click/tap) for Chrome autoplay policy.
+/* ── Compliance tracking ── */
+export function useCompliance() {
+  const { data: items, reload } = useAsyncData(() => db.compliance.toArray())
 
-interface AudioState {
+  const update = useCallback(
+    async (id: string, changes: Partial<ComplianceItem>) => {
+      await db.compliance.update(id, changes)
+      await reload()
+    },
+    [reload],
+  )
+
+  return { items, update, reload }
+}
+
+/* ── 8-Bit Chiptune Soundtrack (NES/SNES-style) ── */
+// Procedural chiptune engine with 3 selectable tracks.
+// Falls back to mp3 files in public/audio/ if present.
+// Must be started from a user gesture for Chrome autoplay policy.
+
+type Note = [number, number] // [frequency Hz, duration in 16th notes] (0 freq = rest)
+
+interface ChipTrack {
+  id: string
+  label: string
+  bpm: number
+  melody: Note[]
+  bass: Note[]
+  file?: string // optional mp3 override path
+}
+
+const TRACKS: ChipTrack[] = [
+  {
+    id: 'konoha',
+    label: 'Konoha Sunset Drive',
+    bpm: 112,
+    file: 'audio/01_Konoha_Sunset_Drive.mp3',
+    melody: [
+      [523, 2], [494, 2], [440, 2], [392, 2],
+      [349, 2], [330, 2], [392, 4],
+      [440, 2], [494, 2], [523, 2], [587, 2],
+      [523, 4], [0, 4],
+      [587, 2], [523, 2], [494, 2], [440, 2],
+      [392, 2], [349, 2], [330, 4],
+      [349, 2], [392, 2], [440, 2], [494, 2],
+      [523, 4], [0, 4],
+    ],
+    bass: [
+      [131, 4], [131, 4], [165, 4], [165, 4],
+      [175, 4], [175, 4], [196, 4], [196, 4],
+      [147, 4], [147, 4], [131, 4], [131, 4],
+      [175, 4], [175, 4], [196, 4], [196, 4],
+    ],
+  },
+  {
+    id: 'investigation',
+    label: 'Investigation',
+    bpm: 84,
+    file: 'audio/investigation.mp3',
+    melody: [
+      [330, 3], [0, 1], [294, 2], [262, 2],
+      [247, 4], [0, 4],
+      [220, 2], [247, 2], [262, 3], [0, 1],
+      [294, 2], [262, 2], [247, 2], [220, 2],
+      [262, 3], [0, 1], [247, 2], [220, 2],
+      [196, 4], [0, 4],
+      [220, 2], [247, 2], [262, 2], [294, 2],
+      [330, 4], [0, 4],
+    ],
+    bass: [
+      [110, 4], [110, 4], [131, 4], [131, 4],
+      [147, 4], [147, 4], [110, 4], [110, 4],
+      [131, 4], [131, 4], [98, 4], [98, 4],
+      [110, 4], [110, 4], [131, 4], [131, 4],
+    ],
+  },
+  {
+    id: 'depanneur',
+    label: 'Corner Store Groove',
+    bpm: 126,
+    melody: [
+      [349, 2], [392, 2], [440, 2], [523, 2],
+      [494, 2], [440, 2], [392, 4],
+      [349, 2], [330, 2], [349, 2], [392, 2],
+      [440, 4], [0, 4],
+      [523, 2], [494, 2], [440, 2], [392, 2],
+      [440, 2], [494, 2], [523, 4],
+      [587, 2], [523, 2], [494, 2], [440, 2],
+      [349, 4], [0, 4],
+    ],
+    bass: [
+      [175, 4], [175, 4], [233, 4], [233, 4],
+      [262, 4], [262, 4], [175, 4], [175, 4],
+      [175, 4], [175, 4], [233, 4], [233, 4],
+      [262, 4], [262, 4], [175, 4], [175, 4],
+    ],
+  },
+]
+
+interface ChipState {
   ctx: AudioContext
   gain: GainNode
+  timer: number
+  audio?: HTMLAudioElement
 }
 
-function startAmbientLoop(vol: number): AudioState {
+function startChiptune(track: ChipTrack, vol: number): ChipState {
   const ctx = new AudioContext()
   const master = ctx.createGain()
   master.gain.value = vol
   master.connect(ctx.destination)
 
-  // Warm pad — two detuned oscillators through a low-pass filter
-  const makePad = (freq: number, detune: number) => {
+  const sixteenth = 60 / track.bpm / 4 // duration of one 16th note in seconds
+  let melodyIdx = 0
+  let bassIdx = 0
+  let nextMelodyTime = ctx.currentTime + 0.05
+  let nextBassTime = ctx.currentTime + 0.05
+
+  function scheduleNote(time: number, freq: number, dur: number, type: OscillatorType, gainVal: number) {
+    if (freq === 0) return // rest
     const osc = ctx.createOscillator()
-    osc.type = 'sine'
+    osc.type = type
     osc.frequency.value = freq
-    osc.detune.value = detune
-    const g = ctx.createGain()
-    g.gain.value = 0.08
-    const lp = ctx.createBiquadFilter()
-    lp.type = 'lowpass'
-    lp.frequency.value = 800
-    lp.Q.value = 1
-    osc.connect(lp).connect(g).connect(master)
-    osc.start()
-    return osc
+    const env = ctx.createGain()
+    env.gain.setValueAtTime(0, time)
+    env.gain.linearRampToValueAtTime(gainVal, time + 0.008)
+    env.gain.setValueAtTime(gainVal * 0.8, time + dur * 0.7)
+    env.gain.linearRampToValueAtTime(0, time + dur * 0.95)
+    osc.connect(env).connect(master)
+    osc.start(time)
+    osc.stop(time + dur)
   }
 
-  // Gentle chord: Cmaj7 voicing (C3, E3, G3, B3)
-  makePad(130.81, 0)
-  makePad(164.81, 7)
-  makePad(196.00, -5)
-  makePad(246.94, 3)
+  // Schedule-ahead loop: check every 50ms, schedule 150ms into the future
+  const timer = window.setInterval(() => {
+    const lookAhead = ctx.currentTime + 0.15
 
-  // Slow LFO to gently modulate the master volume for a breathing feel
-  const lfo = ctx.createOscillator()
-  lfo.type = 'sine'
-  lfo.frequency.value = 0.08 // very slow
-  const lfoGain = ctx.createGain()
-  lfoGain.gain.value = vol * 0.3
-  lfo.connect(lfoGain).connect(master.gain)
-  lfo.start()
+    while (nextMelodyTime < lookAhead) {
+      const [freq, len] = track.melody[melodyIdx % track.melody.length]
+      const dur = len * sixteenth
+      scheduleNote(nextMelodyTime, freq, dur, 'square', 0.06)
+      nextMelodyTime += dur
+      melodyIdx++
+    }
 
-  return { ctx, gain: master }
+    while (nextBassTime < lookAhead) {
+      const [freq, len] = track.bass[bassIdx % track.bass.length]
+      const dur = len * sixteenth
+      scheduleNote(nextBassTime, freq, dur, 'triangle', 0.1)
+      nextBassTime += dur
+      bassIdx++
+    }
+  }, 50)
+
+  return { ctx, gain: master, timer }
 }
 
 export function useSoundtrack() {
-  const stateRef = useRef<AudioState | null>(null)
+  const stateRef = useRef<ChipState | null>(null)
   const [playing, setPlaying] = useState(false)
   const [volume, setVolumeState] = useState(0.25)
+  const [currentTrack, setCurrentTrackState] = useState(() =>
+    localStorage.getItem('depanneur-soundtrack-track') || 'konoha'
+  )
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (stateRef.current) {
+        clearInterval(stateRef.current.timer)
+        stateRef.current.audio?.pause()
         stateRef.current.ctx.close()
         stateRef.current = null
       }
     }
   }, [])
 
+  const stopCurrent = useCallback(() => {
+    if (stateRef.current) {
+      clearInterval(stateRef.current.timer)
+      stateRef.current.audio?.pause()
+      stateRef.current.ctx.close()
+      stateRef.current = null
+    }
+  }, [])
+
   const play = useCallback(() => {
     if (stateRef.current) {
-      // Resume if suspended
-      if (stateRef.current.ctx.state === 'suspended') {
+      if (stateRef.current.audio) {
+        stateRef.current.audio.play().catch(() => {})
+      } else if (stateRef.current.ctx.state === 'suspended') {
         stateRef.current.ctx.resume()
       }
       setPlaying(true)
       return
     }
-    // Create fresh — must be called from user gesture context
-    stateRef.current = startAmbientLoop(0.25)
+    const track = TRACKS.find((t) => t.id === currentTrack) || TRACKS[0]
+
+    // Try mp3 file first, fall back to chiptune synth
+    if (track.file) {
+      const base = import.meta.env.BASE_URL
+      const audio = new Audio(`${base}${track.file}`)
+      audio.loop = true
+      audio.volume = 0.25
+      audio.play().then(() => {
+        const ctx = new AudioContext()
+        const gain = ctx.createGain()
+        gain.gain.value = 0.25
+        stateRef.current = { ctx, gain, timer: 0, audio }
+        setPlaying(true)
+      }).catch(() => {
+        // Mp3 not found — use chiptune synth
+        stateRef.current = startChiptune(track, 0.25)
+        setPlaying(true)
+      })
+      return
+    }
+
+    stateRef.current = startChiptune(track, 0.25)
     setPlaying(true)
-  }, [])
+  }, [currentTrack])
 
   const pause = useCallback(() => {
     if (stateRef.current) {
-      stateRef.current.ctx.suspend()
+      if (stateRef.current.audio) {
+        stateRef.current.audio.pause()
+      } else {
+        stateRef.current.ctx.suspend()
+      }
     }
     setPlaying(false)
   }, [])
@@ -277,11 +432,31 @@ export function useSoundtrack() {
   const setVolume = useCallback((v: number) => {
     if (stateRef.current) {
       stateRef.current.gain.gain.value = v
+      if (stateRef.current.audio) stateRef.current.audio.volume = v
     }
     setVolumeState(v)
   }, [])
 
-  return { playing, volume, play, pause, toggle, setVolume }
+  const setTrack = useCallback((id: string) => {
+    localStorage.setItem('depanneur-soundtrack-track', id)
+    setCurrentTrackState(id)
+    const wasPlaying = stateRef.current && (
+      stateRef.current.audio ? !stateRef.current.audio.paused :
+      stateRef.current.ctx.state === 'running'
+    )
+    stopCurrent()
+    if (wasPlaying) {
+      const track = TRACKS.find((t) => t.id === id) || TRACKS[0]
+      stateRef.current = startChiptune(track, 0.25)
+      setPlaying(true)
+    }
+  }, [stopCurrent])
+
+  return {
+    playing, volume, play, pause, toggle, setVolume,
+    currentTrack, tracks: TRACKS.map((t) => ({ id: t.id, label: t.label })),
+    setTrack,
+  }
 }
 
 /* ── PWA install prompt ── */

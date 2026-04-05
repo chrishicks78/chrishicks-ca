@@ -721,6 +721,92 @@ const strings: Record<string, Record<Locale, string>> = {
     'zh-Hans': '如果SAP有这个界面，顾问们都要失业了。',
     'zh-Hant': '如果SAP有這個介面，顧問們都要失業了。',
   },
+
+  // Soundtrack
+  'settings.soundtrack.track': {
+    en: 'Track',
+    fr: 'Piste',
+    'zh-Hans': '曲目',
+    'zh-Hant': '曲目',
+  },
+
+  // Data & Privacy
+  'settings.data.title': {
+    en: 'Data & Privacy',
+    fr: 'Données et confidentialité',
+    'zh-Hans': '数据与隐私',
+    'zh-Hant': '資料與隱私',
+  },
+  'settings.data.persists': {
+    en: 'Data saves automatically between sessions',
+    fr: 'Les données se sauvegardent automatiquement',
+    'zh-Hans': '数据在会话之间自动保存',
+    'zh-Hant': '資料在會話之間自動儲存',
+  },
+  'settings.data.offline': {
+    en: 'Works fully offline once installed',
+    fr: 'Fonctionne hors ligne une fois installé',
+    'zh-Hans': '安装后完全离线工作',
+    'zh-Hant': '安裝後完全離線工作',
+  },
+  'settings.data.local': {
+    en: 'Data stays on THIS device only — does not sync',
+    fr: 'Les données restent sur CET appareil uniquement',
+    'zh-Hans': '数据仅保留在此设备上——不会同步',
+    'zh-Hant': '資料僅保留在此裝置上——不會同步',
+  },
+  'settings.data.hint': {
+    en: 'Use Export/Import to transfer data between devices',
+    fr: 'Utilisez Exporter/Importer pour transférer les données',
+    'zh-Hans': '使用导出/导入在设备之间传输数据',
+    'zh-Hant': '使用匯出/匯入在裝置之間傳輸資料',
+  },
+  'settings.data.backup': {
+    en: 'Last backup',
+    fr: 'Dernière sauvegarde',
+    'zh-Hans': '上次备份',
+    'zh-Hant': '上次備份',
+  },
+  'settings.data.never': {
+    en: 'Never',
+    fr: 'Jamais',
+    'zh-Hans': '从未',
+    'zh-Hant': '從未',
+  },
+
+  // Compliance tracking
+  'comply.verify': {
+    en: 'Mark Verified',
+    fr: 'Marquer vérifié',
+    'zh-Hans': '标记已验证',
+    'zh-Hant': '標記已驗證',
+  },
+  'comply.grocery': {
+    en: 'Municipal grocery/convenience permit — required for all dépanneurs in Quebec.',
+    fr: 'Permis d\'épicerie/dépanneur municipal — requis pour tous les dépanneurs au Québec.',
+    'zh-Hans': '市政杂货/便利店许可证——魁北克所有便利店必需。',
+    'zh-Hant': '市政雜貨/便利店許可證——魁北克所有便利店必需。',
+  },
+
+  // Customer enhancements
+  'cust.active': {
+    en: 'Active Requests',
+    fr: 'Demandes actives',
+    'zh-Hans': '活跃请求',
+    'zh-Hant': '活躍請求',
+  },
+  'cust.fulfilled': {
+    en: 'Fulfilled',
+    fr: 'Livrées',
+    'zh-Hans': '已完成',
+    'zh-Hant': '已完成',
+  },
+  'cust.empty': {
+    en: 'No special requests yet. Customers can ask for items you don\'t stock.',
+    fr: 'Pas encore de demandes spéciales.',
+    'zh-Hans': '还没有特殊请求。顾客可以要求您没有库存的商品。',
+    'zh-Hant': '還沒有特殊請求。顧客可以要求您沒有庫存的商品。',
+  },
 }
 
 export function t(key: string, locale: Locale): string {

@@ -71,7 +71,11 @@ export interface SpecialCustomerRequest {
   dateRequested: number
   dateResolved?: number
   notes?: string
+  estimatedCost?: number
+  priority?: 'low' | 'normal' | 'urgent'
 }
+
+export type ExpenseCategory = 'supplier-payment' | 'utilities' | 'repairs' | 'supplies' | 'payroll' | 'other'
 
 export interface DailySales {
   id?: number
@@ -79,8 +83,21 @@ export interface DailySales {
   cashIn: number
   cardIn: number
   expenses: number
+  expenseCategory?: ExpenseCategory
   notes?: string
   recordedBy: string
+}
+
+export interface ComplianceItem {
+  id: string
+  name: string
+  icon: string
+  descKey: string
+  status: 'ok' | 'due-soon' | 'expired' | 'unknown'
+  expiryDate?: string
+  lastChecked?: number
+  checkedBy?: string
+  notes?: string
 }
 
 export interface Toast {

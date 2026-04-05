@@ -4,8 +4,8 @@ import { t } from './i18n'
 import type { Locale, UserProfile, DashboardTab } from './types'
 import {
   useBootstrap, useToasts, useUsers, useInventory, useSuppliers,
-  useDeliveries, useCustomerRequests, useSales, useSoundtrack,
-  useInstallPrompt, useLocale,
+  useDeliveries, useCustomerRequests, useSales, useCompliance,
+  useSoundtrack, useInstallPrompt, useLocale,
 } from './hooks'
 
 import SplashScreen from './components/SplashScreen'
@@ -64,7 +64,8 @@ export default function App() {
   const { suppliers } = useSuppliers()
   const { deliveries, add: addDelivery, update: updateDelivery } = useDeliveries()
   const { requests, add: addRequest, update: updateRequest } = useCustomerRequests()
-  const { sales, add: addSale } = useSales()
+  const { sales, add: addSale, update: updateSale } = useSales()
+  const { items: complianceItems, update: updateCompliance } = useCompliance()
   const soundtrack = useSoundtrack()
   const pwa = useInstallPrompt()
 
@@ -180,11 +181,20 @@ export default function App() {
             user={currentUser}
             sales={sales}
             onAdd={addSale}
+            onUpdate={updateSale}
             onToast={toast}
           />
         )
       case 'compliance':
-        return <CompliancePanel locale={locale} />
+        return (
+          <CompliancePanel
+            locale={locale}
+            user={currentUser}
+            items={complianceItems}
+            onUpdate={updateCompliance}
+            onToast={toast}
+          />
+        )
       case 'settings':
         return (
           <SettingsPanel

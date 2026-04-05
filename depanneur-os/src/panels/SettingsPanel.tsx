@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { t, getLocaleLabel, LOCALES } from '../i18n'
 import { db } from '../db'
 import type { Locale, UserProfile } from '../types'
@@ -6,7 +7,7 @@ interface Props {
   locale: Locale
   user: UserProfile
   setLocale: (l: Locale) => void
-  soundtrack: { playing: boolean; volume: number; toggle: () => void; setVolume: (v: number) => void; play: () => void }
+  soundtrack: { playing: boolean; volume: number; toggle: () => void; setVolume: (v: number) => void; play: () => void; currentTrack: string; tracks: { id: string; label: string }[]; setTrack: (id: string) => void }
   pwa: { canInstall: boolean; installed: boolean; install: () => void }
   theme: 'light' | 'dark'
   onToggleTheme: () => void
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa, theme, onToggleTheme, onToast, onLogout }: Props) {
+  const [lastBackup, setLastBackup] = useState(() => localStorage.getItem('depanneur-last-backup'))
 
   async function handleExport() {
     const data = {
@@ -33,6 +35,9 @@ export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa
     a.download = `lydias-backup-${new Date().toISOString().slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(url)
+    const ts = new Date().toISOString()
+    localStorage.setItem('depanneur-last-backup', ts)
+    setLastBackup(ts)
     onToast('Data exported', 'success')
   }
 
@@ -134,6 +139,23 @@ export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa
             />
           </div>
         </div>
+        {/* Track selector */}
+        <div className="setting-row">
+          <div>
+            <div className="setting-label">{t('settings.soundtrack.track', locale)}</div>
+            <div className="setting-desc">Plateau Hearts OST</div>
+          </div>
+          <select
+            className="form-select"
+            style={{ width: 'auto', minWidth: 160 }}
+            value={soundtrack.currentTrack}
+            onChange={(e) => soundtrack.setTrack(e.target.value)}
+          >
+            {soundtrack.tracks.map((tr) => (
+              <option key={tr.id} value={tr.id}>{tr.label}</option>
+            ))}
+          </select>
+        </div>
 
         {/* PWA Install */}
         {pwa.canInstall && (
@@ -167,6 +189,22 @@ export default function SettingsPanel({ locale, user, setLocale, soundtrack, pwa
           <button className="btn btn-sm btn-secondary" onClick={handleImport}>
             {t('settings.import', locale)}
           </button>
+        </div>
+
+        {/* Data & Privacy */}
+        <div className="setting-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
+          <div className="setting-label">{t('settings.data.title', locale)}</div>
+          <div style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--text-secondary)' }}>
+            <div>✓ {t('settings.data.persists', locale)}</div>
+            <div>✓ {t('settings.data.offline', locale)}</div>
+            <div style={{ color: 'var(--warning)' }}>⚠ {t('settings.data.local', locale)}</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 4 }}>
+              💡 {t('settings.data.hint', locale)}
+            </div>
+            <div style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 4 }}>
+              {t('settings.data.backup', locale)}: {lastBackup ? new Date(lastBackup).toLocaleDateString() : t('settings.data.never', locale)}
+            </div>
+          </div>
         </div>
 
         {/* Reset */}

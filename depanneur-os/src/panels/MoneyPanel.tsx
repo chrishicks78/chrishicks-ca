@@ -1,12 +1,22 @@
 import { useState, useMemo } from 'react'
 import { t } from '../i18n'
-import type { Locale, UserProfile, DailySales } from '../types'
+import type { Locale, UserProfile, DailySales, ExpenseCategory } from '../types'
+
+const EXPENSE_CATS: { value: ExpenseCategory; label: string }[] = [
+  { value: 'supplier-payment', label: 'Supplier Payment' },
+  { value: 'utilities', label: 'Utilities' },
+  { value: 'repairs', label: 'Repairs' },
+  { value: 'supplies', label: 'Supplies' },
+  { value: 'payroll', label: 'Payroll' },
+  { value: 'other', label: 'Other' },
+]
 
 interface Props {
   locale: Locale
   user: UserProfile
   sales: DailySales[]
   onAdd: (s: Omit<DailySales, 'id'>) => Promise<void>
+  onUpdate: (id: number, changes: Partial<DailySales>) => Promise<void>
   onToast: (msg: string, type?: 'info' | 'success' | 'warning' | 'error') => void
 }
 
@@ -23,11 +33,13 @@ const SAP_EGGS = [
   'easter.sap.4', 'easter.sap.5', 'easter.sap.6',
 ]
 
-export default function MoneyPanel({ locale, user, sales, onAdd, onToast }: Props) {
+export default function MoneyPanel({ locale, user, sales, onAdd, onUpdate, onToast }: Props) {
   const [cashIn, setCashIn] = useState('')
   const [cardIn, setCardIn] = useState('')
   const [expenses, setExpenses] = useState('')
+  const [expenseCat, setExpenseCat] = useState<ExpenseCategory>('supplier-payment')
   const [notes, setNotes] = useState('')
+  const [editId, setEditId] = useState<number | null>(null)
 
   const today = todayStr()
 
@@ -71,7 +83,12 @@ export default function MoneyPanel({ locale, user, sales, onAdd, onToast }: Prop
       onToast('Enter at least one value', 'warning')
       return
     }
-    await onAdd({ date: today, cashIn: c, cardIn: cd, expenses: e, notes, recordedBy: user.id })
+    if (editId) {
+      await onUpdate(editId, { cashIn: c, cardIn: cd, expenses: e, expenseCategory: expenseCat, notes })
+      setEditId(null)
+    } else {
+      await onAdd({ date: today, cashIn: c, cardIn: cd, expenses: e, expenseCategory: expenseCat, notes, recordedBy: user.id })
+    }
     setCashIn('')
     setCardIn('')
     setExpenses('')
@@ -162,15 +179,20 @@ export default function MoneyPanel({ locale, user, sales, onAdd, onToast }: Prop
             />
           </div>
         </div>
-        <input
-          className="form-input"
-          placeholder="Notes (optional)"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          style={{ marginBottom: 12 }}
-        />
+        <div className="form-row" style={{ marginBottom: 12 }}>
+          <div className="form-group" style={{ margin: 0 }}>
+            <label>Category</label>
+            <select className="form-select" value={expenseCat} onChange={(e) => setExpenseCat(e.target.value as ExpenseCategory)}>
+              {EXPENSE_CATS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
+          </div>
+          <div className="form-group" style={{ margin: 0 }}>
+            <label>Notes</label>
+            <input className="form-input" placeholder="Optional" value={notes} onChange={(e) => setNotes(e.target.value)} />
+          </div>
+        </div>
         <button className="btn btn-primary btn-lg" style={{ width: '100%' }} onClick={handleRecord}>
-          {t('money.record', locale)}
+          {editId ? '✓ Update Entry' : t('money.record', locale)}
         </button>
       </div>
 
@@ -217,15 +239,25 @@ export default function MoneyPanel({ locale, user, sales, onAdd, onToast }: Prop
         <div className="money-history">
           {sales.slice(0, 14).map((s) => {
             const net = s.cashIn + s.cardIn - s.expenses
+            const isToday = s.date === today
             return (
               <div key={s.id} className="money-history-row">
-                <span className="date">{s.date}</span>
+                <span className="date">{s.date}{s.expenseCategory ? ` · ${s.expenseCategory}` : ''}</span>
                 <span style={{ color: 'var(--text-secondary)', fontSize: 12 }}>
                   {fmtCAD(s.cashIn)} + {fmtCAD(s.cardIn)} − {fmtCAD(s.expenses)}
                 </span>
                 <span className="amount" style={{ color: net >= 0 ? 'var(--success)' : 'var(--error)' }}>
                   {fmtCAD(net)}
                 </span>
+                {isToday && (
+                  <button className="btn btn-sm btn-ghost" onClick={() => {
+                    setCashIn(String(s.cashIn)); setCardIn(String(s.cardIn))
+                    setExpenses(String(s.expenses)); setNotes(s.notes || '')
+                    setExpenseCat(s.expenseCategory || 'supplier-payment')
+                    setEditId(s.id!)
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}>✏️</button>
+                )}
               </div>
             )
           })}
