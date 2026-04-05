@@ -56,7 +56,7 @@ export default function UserSelect({ locale, users, onSelect, onAdd }: Props) {
                 className="form-input"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                placeholder="Cedric, Marie, etc."
+                placeholder="Jenny, Cedric, etc."
                 autoFocus
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               />

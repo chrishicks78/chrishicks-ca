@@ -26,6 +26,42 @@ const strings: Record<string, Record<Locale, string>> = {
     'zh-Hans': '正在准备您的工作区...',
     'zh-Hant': '正在準備您的工作區...',
   },
+  'boot.tap': {
+    en: 'TAP TO BOOT',
+    fr: 'APPUYEZ POUR DÉMARRER',
+    'zh-Hans': '点击启动',
+    'zh-Hant': '點擊啟動',
+  },
+  'boot.inventory': {
+    en: 'Loading inventory module...',
+    fr: 'Chargement du module inventaire...',
+    'zh-Hans': '加载库存模块...',
+    'zh-Hant': '載入庫存模組...',
+  },
+  'boot.deliveries': {
+    en: 'Loading delivery tracker...',
+    fr: 'Chargement du suivi des livraisons...',
+    'zh-Hans': '加载配送跟踪...',
+    'zh-Hant': '載入配送追蹤...',
+  },
+  'boot.money': {
+    en: 'Loading daily sales...',
+    fr: 'Chargement des ventes quotidiennes...',
+    'zh-Hans': '加载每日销售...',
+    'zh-Hant': '載入每日銷售...',
+  },
+  'boot.compliance': {
+    en: 'Loading compliance checks...',
+    fr: 'Chargement des vérifications de conformité...',
+    'zh-Hans': '加载合规检查...',
+    'zh-Hant': '載入合規檢查...',
+  },
+  'boot.ready': {
+    en: 'System ready.',
+    fr: 'Système prêt.',
+    'zh-Hans': '系统就绪。',
+    'zh-Hant': '系統就緒。',
+  },
 
   // User select
   'user.select.title': {

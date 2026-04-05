@@ -39,28 +39,24 @@ db.version(3).stores({
   compliance: 'id, status',
 })
 
+// v4: remove Jenny (name unknown — only Defei should be seeded)
+db.version(4).stores({}).upgrade(async (tx) => {
+  const users = tx.table('users')
+  await users.where('id').equals('jenny').delete()
+})
+
 // Seed default users on first run
 export async function ensureDefaults() {
   const userCount = await db.users.count()
   if (userCount === 0) {
-    await db.users.bulkAdd([
-      {
-        id: 'defei',
-        name: 'Defei Chen',
-        role: 'owner',
-        locale: 'en',
-        onboarded: false,
-        createdAt: Date.now(),
-      },
-      {
-        id: 'jenny',
-        name: 'Jenny',
-        role: 'owner',
-        locale: 'zh-Hans',
-        onboarded: false,
-        createdAt: Date.now(),
-      },
-    ])
+    await db.users.add({
+      id: 'defei',
+      name: 'Defei Chen',
+      role: 'owner',
+      locale: 'en',
+      onboarded: false,
+      createdAt: Date.now(),
+    })
   }
 
   const supplierCount = await db.suppliers.count()

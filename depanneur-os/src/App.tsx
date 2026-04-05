@@ -30,14 +30,28 @@ function getInitialTheme(): Theme {
   return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
 }
 
-const TAB_CONFIG: { id: DashboardTab; icon: string; labelKey: string; ownerOnly?: boolean }[] = [
-  { id: 'overview', icon: '📊', labelKey: 'tab.overview' },
-  { id: 'money', icon: '💰', labelKey: 'tab.money', ownerOnly: true },
-  { id: 'inventory', icon: '📦', labelKey: 'tab.inventory' },
-  { id: 'deliveries', icon: '🚚', labelKey: 'tab.deliveries' },
-  { id: 'customers', icon: '🙋', labelKey: 'tab.customers' },
-  { id: 'compliance', icon: '📋', labelKey: 'tab.compliance' },
-  { id: 'settings', icon: '⚙️', labelKey: 'tab.settings' },
+// SVG line icons for sidebar nav
+function NavIcon({ id }: { id: string }) {
+  switch (id) {
+    case 'overview': return <svg viewBox="0 0 24 24"><path d="M3 12h4v9H3zM10 3h4v18h-4zM17 8h4v13h-4z"/></svg>
+    case 'money': return <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    case 'inventory': return <svg viewBox="0 0 24 24"><path d="M21 8V21H3V8M1 3h22v5H1zM10 12h4"/></svg>
+    case 'deliveries': return <svg viewBox="0 0 24 24"><path d="M1 3h15v13H1zM16 8h4l3 4v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    case 'customers': return <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    case 'compliance': return <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+    case 'settings': return <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    default: return null
+  }
+}
+
+const TAB_CONFIG: { id: DashboardTab; emoji: string; labelKey: string; ownerOnly?: boolean }[] = [
+  { id: 'overview', emoji: '📊', labelKey: 'tab.overview' },
+  { id: 'money', emoji: '💰', labelKey: 'tab.money', ownerOnly: true },
+  { id: 'inventory', emoji: '📦', labelKey: 'tab.inventory' },
+  { id: 'deliveries', emoji: '🚚', labelKey: 'tab.deliveries' },
+  { id: 'customers', emoji: '🙋', labelKey: 'tab.customers' },
+  { id: 'compliance', emoji: '📋', labelKey: 'tab.compliance' },
+  { id: 'settings', emoji: '⚙️', labelKey: 'tab.settings' },
 ]
 
 export default function App() {
@@ -251,8 +265,9 @@ export default function App() {
       {/* Desktop Sidebar */}
       <nav className="sidebar">
         <div className="sidebar-brand">
-          <h2>🏪 Lydia's</h2>
-          <small>{t('app.subtitle', locale)}</small>
+          <div className="brand-name">LYDIA'S</div>
+          <div className="brand-os">DÉPANNEUR OS</div>
+          <div className="brand-version">v1.0 — NDG, Montréal</div>
         </div>
         <div className="sidebar-nav">
           {visibleTabs.map((tc) => (
@@ -261,7 +276,7 @@ export default function App() {
               className={`nav-item${activeTab === tc.id ? ' active' : ''}`}
               onClick={() => setActiveTab(tc.id)}
             >
-              <span className="icon">{tc.icon}</span>
+              <span className="icon"><NavIcon id={tc.id} /></span>
               {t(tc.labelKey, locale)}
             </button>
           ))}
@@ -303,7 +318,7 @@ export default function App() {
             className={`bottom-tab${activeTab === tc.id ? ' active' : ''}`}
             onClick={() => setActiveTab(tc.id)}
           >
-            <span className="tab-icon">{tc.icon}</span>
+            <span className="tab-icon">{tc.emoji}</span>
             {t(tc.labelKey, locale)}
           </button>
         ))}
