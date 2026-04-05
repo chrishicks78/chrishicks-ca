@@ -5,10 +5,11 @@ import type { Locale } from '../types'
 interface Props {
   locale: Locale
   ready: boolean
+  onTap?: () => void
   onDone: () => void
 }
 
-export default function SplashScreen({ locale, ready, onDone }: Props) {
+export default function SplashScreen({ locale, ready, onTap, onDone }: Props) {
   const [fading, setFading] = useState(false)
   const [tapped, setTapped] = useState(false)
 
@@ -24,8 +25,15 @@ export default function SplashScreen({ locale, ready, onDone }: Props) {
     return () => clearTimeout(id)
   }, [fading, onDone])
 
+  function handleTap() {
+    if (!tapped) {
+      setTapped(true)
+      onTap?.() // Fire immediately in gesture context for Chrome autoplay
+    }
+  }
+
   return (
-    <div className={`splash${fading ? ' fade-out' : ''}`} onClick={() => setTapped(true)}>
+    <div className={`splash${fading ? ' fade-out' : ''}`} onClick={handleTap}>
       <div className="splash-logo">🏪</div>
       <h1>{t('app.splash.welcome', locale)}</h1>
       <p>6030 Sherbrooke Ouest, NDG</p>

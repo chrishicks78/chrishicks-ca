@@ -206,7 +206,7 @@ export default function App() {
   if (phase === 'splash') {
     return (
       <>
-        <SplashScreen locale={locale} ready={dbReady} onDone={() => { soundtrack.play(); setPhase('user-select') }} />
+        <SplashScreen locale={locale} ready={dbReady} onTap={() => soundtrack.play()} onDone={() => setPhase('user-select')} />
         <ToastContainer toasts={toasts} />
       </>
     )

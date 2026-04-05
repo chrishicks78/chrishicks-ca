@@ -183,36 +183,89 @@ export function useSales() {
   return { sales, add, reload }
 }
 
-/* ── Soundtrack ── */
-export function useSoundtrack() {
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const [playing, setPlaying] = useState(false)
-  const [volume, setVolumeState] = useState(0.3)
+/* ── Soundtrack (Web Audio API — no mp3 needed) ── */
+// Generates a gentle ambient lo-fi loop using oscillators and filters.
+// Must be started from a user gesture (click/tap) for Chrome autoplay policy.
 
+interface AudioState {
+  ctx: AudioContext
+  gain: GainNode
+}
+
+function startAmbientLoop(vol: number): AudioState {
+  const ctx = new AudioContext()
+  const master = ctx.createGain()
+  master.gain.value = vol
+  master.connect(ctx.destination)
+
+  // Warm pad — two detuned oscillators through a low-pass filter
+  const makePad = (freq: number, detune: number) => {
+    const osc = ctx.createOscillator()
+    osc.type = 'sine'
+    osc.frequency.value = freq
+    osc.detune.value = detune
+    const g = ctx.createGain()
+    g.gain.value = 0.08
+    const lp = ctx.createBiquadFilter()
+    lp.type = 'lowpass'
+    lp.frequency.value = 800
+    lp.Q.value = 1
+    osc.connect(lp).connect(g).connect(master)
+    osc.start()
+    return osc
+  }
+
+  // Gentle chord: Cmaj7 voicing (C3, E3, G3, B3)
+  makePad(130.81, 0)
+  makePad(164.81, 7)
+  makePad(196.00, -5)
+  makePad(246.94, 3)
+
+  // Slow LFO to gently modulate the master volume for a breathing feel
+  const lfo = ctx.createOscillator()
+  lfo.type = 'sine'
+  lfo.frequency.value = 0.08 // very slow
+  const lfoGain = ctx.createGain()
+  lfoGain.gain.value = vol * 0.3
+  lfo.connect(lfoGain).connect(master.gain)
+  lfo.start()
+
+  return { ctx, gain: master }
+}
+
+export function useSoundtrack() {
+  const stateRef = useRef<AudioState | null>(null)
+  const [playing, setPlaying] = useState(false)
+  const [volume, setVolumeState] = useState(0.25)
+
+  // Cleanup on unmount
   useEffect(() => {
-    const audio = new Audio()
-    audio.loop = true
-    audio.volume = 0.3
-    audioRef.current = audio
     return () => {
-      audio.pause()
-      audio.src = ''
+      if (stateRef.current) {
+        stateRef.current.ctx.close()
+        stateRef.current = null
+      }
     }
   }, [])
 
-  const play = useCallback((track?: string) => {
-    const audio = audioRef.current
-    if (!audio) return
-    const base = import.meta.env.BASE_URL
-    const src = `${base}audio/${track || 'investigation.mp3'}`
-    if (audio.src !== new URL(src, window.location.href).href) {
-      audio.src = src
+  const play = useCallback(() => {
+    if (stateRef.current) {
+      // Resume if suspended
+      if (stateRef.current.ctx.state === 'suspended') {
+        stateRef.current.ctx.resume()
+      }
+      setPlaying(true)
+      return
     }
-    audio.play().then(() => setPlaying(true)).catch(() => {})
+    // Create fresh — must be called from user gesture context
+    stateRef.current = startAmbientLoop(0.25)
+    setPlaying(true)
   }, [])
 
   const pause = useCallback(() => {
-    audioRef.current?.pause()
+    if (stateRef.current) {
+      stateRef.current.ctx.suspend()
+    }
     setPlaying(false)
   }, [])
 
@@ -222,7 +275,9 @@ export function useSoundtrack() {
   }, [playing, play, pause])
 
   const setVolume = useCallback((v: number) => {
-    if (audioRef.current) audioRef.current.volume = v
+    if (stateRef.current) {
+      stateRef.current.gain.gain.value = v
+    }
     setVolumeState(v)
   }, [])
 

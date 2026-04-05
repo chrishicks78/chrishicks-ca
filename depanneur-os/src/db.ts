@@ -26,6 +26,12 @@ db.version(1).stores({
   suppliers: 'id, name',
 })
 
+// v2: clean up stale seed users, keep only Defei + Jenny
+db.version(2).stores({}).upgrade(async (tx) => {
+  const users = tx.table('users')
+  await users.where('id').anyOf(['chris', 'cedric', 'employee-1']).delete()
+})
+
 // Seed default users on first run
 export async function ensureDefaults() {
   const userCount = await db.users.count()
@@ -44,14 +50,6 @@ export async function ensureDefaults() {
         name: 'Jenny',
         role: 'owner',
         locale: 'zh-Hans',
-        onboarded: false,
-        createdAt: Date.now(),
-      },
-      {
-        id: 'employee-1',
-        name: 'Employee',
-        role: 'employee',
-        locale: 'fr',
         onboarded: false,
         createdAt: Date.now(),
       },
