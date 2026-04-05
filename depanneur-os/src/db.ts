@@ -40,8 +40,16 @@ export async function ensureDefaults() {
         createdAt: Date.now(),
       },
       {
-        id: 'cedric',
-        name: 'Cedric',
+        id: 'jenny',
+        name: 'Jenny',
+        role: 'owner',
+        locale: 'zh-Hans',
+        onboarded: false,
+        createdAt: Date.now(),
+      },
+      {
+        id: 'employee-1',
+        name: 'Employee',
         role: 'employee',
         locale: 'fr',
         onboarded: false,

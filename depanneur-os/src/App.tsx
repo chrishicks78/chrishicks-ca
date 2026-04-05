@@ -206,7 +206,7 @@ export default function App() {
   if (phase === 'splash') {
     return (
       <>
-        <SplashScreen locale={locale} ready={dbReady} onDone={() => setPhase('user-select')} />
+        <SplashScreen locale={locale} ready={dbReady} onDone={() => { soundtrack.play(); setPhase('user-select') }} />
         <ToastContainer toasts={toasts} />
       </>
     )
@@ -272,6 +272,16 @@ export default function App() {
 
       {/* Main Content */}
       <main className="main-content">
+        {/* Contextual help hint */}
+        {(() => {
+          const helpKey = `help.${activeTab}`
+          const helpText = t(helpKey, locale)
+          return helpText !== helpKey ? (
+            <div className="help-hint glass-card" style={{ marginBottom: 16, padding: '10px 16px', fontSize: 13, color: 'var(--text-secondary)', borderLeft: '3px solid var(--info)' }}>
+              ℹ️ {helpText}
+            </div>
+          ) : null
+        })()}
         {renderPanel()}
       </main>
 

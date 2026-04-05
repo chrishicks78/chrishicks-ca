@@ -640,6 +640,50 @@ const strings: Record<string, Record<Locale, string>> = {
   'day.5': { en: 'Friday', fr: 'Vendredi', 'zh-Hans': '星期五', 'zh-Hant': '星期五' },
   'day.6': { en: 'Saturday', fr: 'Samedi', 'zh-Hans': '星期六', 'zh-Hant': '星期六' },
 
+  // Contextual Help Hints
+  'help.overview': {
+    en: 'Your daily command center. See what needs attention at a glance — low stock, expected deliveries, and today\'s numbers.',
+    fr: 'Votre centre de commande quotidien. Voyez d\'un coup d\'œil ce qui demande attention.',
+    'zh-Hans': '您的每日指挥中心。一目了然地查看需要关注的事项——库存不足、预计送货和今日数据。',
+    'zh-Hant': '您的每日指揮中心。一目了然地查看需要關注的事項——庫存不足、預計送貨和今日數據。',
+  },
+  'help.inventory': {
+    en: 'Tap + or − to quickly adjust stock counts. Use "Add Item" to enter new products with cost, price, and minimum stock levels.',
+    fr: 'Appuyez sur + ou − pour ajuster les stocks. Utilisez « Ajouter » pour entrer de nouveaux produits.',
+    'zh-Hans': '点击 + 或 − 快速调整库存数量。使用"添加商品"输入新产品的成���、售价和最低库存。',
+    'zh-Hant': '點擊 + 或 − 快速調整庫存數量。使用"添加商品"輸入新產品的成本、售價和最低庫存。',
+  },
+  'help.deliveries': {
+    en: 'Track what\'s arriving and when. Suppliers are pre-loaded with their usual delivery days. Mark items received to keep records accurate.',
+    fr: 'Suivez les arrivées. Les fournisseurs sont préchargés avec leurs jours de livraison habituels.',
+    'zh-Hans': '追踪到货时间。供应商已预设常规送货日。标记已收货以保持记录准确。',
+    'zh-Hant': '追蹤到貨時間。供應商已預設常規送貨日。標記已收貨以保持記錄準確。',
+  },
+  'help.customers': {
+    en: 'Log special requests from regulars so nothing gets forgotten. Track status from open → sourced → delivered.',
+    fr: 'Notez les demandes spéciales des clients réguliers. Suivez le statut de la demande.',
+    'zh-Hans': '记录老顾客的特殊需求，确保不遗忘。追踪状态：待处理 → 已找到 → 已交付。',
+    'zh-Hant': '記錄老顧客的特殊需求，確保不遺忘。追蹤狀態：待處理 → 已找到 → 已交付。',
+  },
+  'help.money': {
+    en: 'Record daily cash and card sales plus expenses. The system calculates your net automatically and shows a 7-day trend.',
+    fr: 'Enregistrez les ventes et dépenses quotidiennes. Le système calcule le net automatiquement.',
+    'zh-Hans': '记录每日现金、刷卡销售和支出。系统自动计算净额并显示7天趋势。',
+    'zh-Hant': '記錄每日現金、刷卡銷售和支出。系統自動計算淨額並顯示7天趨勢。',
+  },
+  'help.compliance': {
+    en: 'Quebec regulatory reminders for your dépanneur. Export them to your calendar so you never miss a renewal.',
+    fr: 'Rappels réglementaires du Québec. Exportez-les vers votre calendrier.',
+    'zh-Hans': '魁北克便利店法规提醒。导出到日历，确保不错过任何续期。',
+    'zh-Hant': '魁北克便利店法規提醒。導出到日曆，確保不錯過任何續期。',
+  },
+  'help.settings': {
+    en: 'Customize language, theme, and soundtrack. Export your data as a backup or import a previous backup.',
+    fr: 'Personnalisez la langue, le thème et la musique. Exportez ou importez vos données.',
+    'zh-Hans': '自定义语言、主题和音乐。导出数据备份或导入之前的备份。',
+    'zh-Hant': '自定義語言、主題和音樂。導出數據備份或導入之前的備份。',
+  },
+
   // SAP easter eggs (owner-only context)
   'easter.sap.1': {
     en: 'Transaction complete. No ABAP dump this time.',
