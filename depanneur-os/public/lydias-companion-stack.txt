@@ -1,0 +1,78 @@
+Lydia's Depanneur Companion Stack
+================================
+
+Purpose
+-------
+Use the app first. The helper stack is optional and should only be added once the PWA is stable on the counter machine.
+
+What this stack is for
+----------------------
+1. LM Studio runs the local model endpoint on the Windows machine.
+2. OpenClaw provides the agent shell, dashboard, hooks, and delegation flow.
+3. Calendar heartbeats keep the operator rhythm visible on phone and Windows calendar.
+4. `lydias-companion-setup.ps1` is the quick helper that installs what it safely can and opens the rest.
+
+Recommended order
+-----------------
+1. Install and pin the PWA from the live Lydia's link in Chrome or Edge.
+2. Import `lydias-heartbeats.ics` into the calendar Defei actually uses every day.
+3. Install LM Studio.
+4. Install OpenClaw.
+5. Run onboarding and keep the first tool profile strict.
+
+LM Studio
+---------
+Official site: https://lmstudio.ai
+Windows install command:
+
+    irm https://lmstudio.ai/install.ps1 | iex
+
+After install:
+1. Launch LM Studio once.
+2. Install the CLI if prompted.
+3. Load a local model only after the app workflow is already comfortable.
+
+OpenClaw
+--------
+Docs home: https://docs.openclaw.ai/
+Onboarding guide: https://docs.openclaw.ai/start/wizard
+Hooks / automation guide: https://docs.openclaw.ai/automation/hooks
+Installer internals: https://docs.openclaw.ai/install/installer
+
+Windows install command:
+
+    iwr -useb https://openclaw.ai/install.ps1 | iex
+
+Safer shared-machine variant:
+
+    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+
+Important Windows note:
+- OpenClaw's onboarding docs say Windows via WSL2 is strongly recommended.
+- If WSL2 is not ready, do that first instead of trying to force a brittle desktop-only setup.
+
+First useful commands after install:
+
+    openclaw onboard
+    openclaw dashboard
+    openclaw hooks list
+
+Delegation idea
+---------------
+Use OpenClaw only for bounded operator-assistant work:
+- summarize the day's special requests
+- draft supplier follow-up notes
+- prep the next Costco run checklist
+- create an owner handoff summary from the board state
+
+Do not let the agent improvise business policy. The app remains the operating surface; OpenClaw is the assistant layer.
+
+Heartbeat cadence
+-----------------
+- The app handles the working surface.
+- The .ics file handles recurring timing.
+- OpenClaw hooks can later write follow-up notes or trigger reminders after onboarding, but keep that turned off until the local flow is trusted.
+
+Operating rule
+--------------
+Keep the shelves clean, the counts clean, and the automation on a short leash.
