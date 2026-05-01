@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateau Heart — Power Baby Productions — Christendo 24</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="boot-screen">
+        <div class="boot-content">
+            <div class="console-logo">
+                <span class="ic24-text">Christendo<span class="ic24-num">24</span></span>
+            </div>
+            <div class="boot-subtitle">CHRISTENDO 24</div>
+            <div class="boot-tagline">The 24-Bit Console We Never Got</div>
+            <div class="boot-progress">
+                <div class="boot-progress-bar"></div>
+            </div>
+            <div class="boot-status">Initializing...</div>
+        </div>
+    </div>
+
+    <div id="title-screen" class="hidden">
+        <canvas id="title-canvas" width="768" height="432"></canvas>
+        <div class="title-overlay">
+            <div class="studio-badge">POWER BABY PRODUCTIONS</div>
+            <h1 class="game-title">PLATEAU<br><span class="heart-text">HEART</span></h1>
+            <div class="title-tagline">A Montreal Beat 'Em Up</div>
+            <div class="title-menu">
+                <button class="menu-btn" id="btn-new-game">New Game</button>
+                <button class="menu-btn" id="btn-continue">Continue</button>
+                <button class="menu-btn" id="btn-options">Options</button>
+            </div>
+            <div class="title-footer">
+                <span class="ic24-badge">C24</span>
+                <span class="copyright">&copy; 2026 Power Baby Productions</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <canvas id="game-canvas" width="768" height="432"></canvas>
+        <div id="hud">
+            <div id="hud-left">
+                <div class="hud-portrait" id="player-portrait"></div>
+                <div class="hud-stats">
+                    <div class="hud-name" id="player-name">KAERU</div>
+                    <div class="hud-bar hp-bar">
+                        <div class="bar-fill" id="hp-fill"></div>
+                        <span class="bar-label">HP</span>
+                    </div>
+                    <div class="hud-bar sp-bar">
+                        <div class="bar-fill" id="sp-fill"></div>
+                        <span class="bar-label">SP</span>
+                    </div>
+                    <div class="hud-level">LV <span id="player-level">1</span></div>
+                </div>
+            </div>
+            <div id="hud-center">
+                <div id="combo-display" class="hidden">
+                    <span id="combo-count">0</span>
+                    <span class="combo-label">COMBO!</span>
+                </div>
+                <div id="area-name" class="hidden">PLATEAU MONT-ROYAL</div>
+            </div>
+            <div id="hud-right">
+                <div class="hud-score">SCORE: <span id="score-value">0</span></div>
+                <div class="hud-coins">$ <span id="coins-value">0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialog-screen" class="hidden">
+        <canvas id="dialog-bg-canvas" width="768" height="432"></canvas>
+        <div id="dialog-box">
+            <div id="dialog-portrait-left" class="dialog-portrait"></div>
+            <div id="dialog-portrait-right" class="dialog-portrait"></div>
+            <div id="dialog-content">
+                <div id="dialog-speaker"></div>
+                <div id="dialog-text"></div>
+                <div id="dialog-choices" class="hidden"></div>
+                <div id="dialog-advance">&#9660;</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pause-screen" class="hidden">
+        <div class="pause-content">
+            <h2>PAUSED</h2>
+            <div class="pause-stats">
+                <div>Chapter: <span id="pause-chapter">1</span></div>
+                <div>Level: <span id="pause-level">1</span></div>
+                <div>HP: <span id="pause-hp">100</span>/<span id="pause-maxhp">100</span></div>
+                <div>Score: <span id="pause-score">0</span></div>
+            </div>
+            <div class="pause-menu">
+                <button class="menu-btn" id="btn-resume">Resume</button>
+                <button class="menu-btn" id="btn-save">Save Game</button>
+                <button class="menu-btn" id="btn-quit">Quit to Title</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Scripts -->
+    <script src="js/sprites.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/world.js"></script>
+    <script src="js/dialog.js"></script>
+    <script src="js/combat.js"></script>
+    <script src="js/engine.js"></script>
+</body>
+</html>
