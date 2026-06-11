@@ -32,9 +32,18 @@ integration was architected, coded, and tested. Read on for the details.
 - Added "policymakers" to audience focus
 
 **Capability Manifest** (`nova.capability.manifest.json`)
-- Bumped to v0.2.0
-- **Switched platform from OpenAI/gpt-4o-mini to Anthropic/claude-opus-4-6**
-- Enabled vision token support (Claude Opus supports vision)
+- Bumped to v0.3.0
+- **Switched platform from OpenAI/gpt-4o-mini to Anthropic/claude-fable-5** —
+  Anthropic's most capable model (Claude 5 family)
+- Enabled vision token support (Fable 5 supports high-resolution vision)
+
+**Model landscape (verified June 2026):** Claude Fable 5 (`claude-fable-5`,
+$10/$50 per MTok, 1M context) is the new standard for this stack, with Claude
+Opus 4.8 (`claude-opus-4-8`, $5/$25) as the refusal/cost fallback. Peer
+frontier models: OpenAI GPT-5.5 (`gpt-5.5`, April 2026) and Google Gemini 3.5
+Flash (`gemini-3.5-flash`, May 2026 GA — 3.5 Pro not yet in the API). OpenClaw
+can route to any of them, but NOVA + LyraPrint pin Anthropic for guardrail
+consistency and CA data-residency posture.
 
 ### 2. Advocacy Website Redesigned
 
@@ -71,7 +80,7 @@ development track — no changes were applied to avoid clobbering that work.
 | NOVA Connector | `lyraprint/nova-bridge/connector.js` | Code that loads NOVA config, enforces guardrails, builds system prompts |
 | Gateway Server | `lyraprint/gateway/server.js` | HTTP API server — orders, chat, health |
 | Order Store | `lyraprint/gateway/order-store.js` | JSON-file order database (SQLite-ready) |
-| Gateway Config | `lyraprint/gateway/gateway.config.json` | Channel routing, auth, LLM config |
+| Gateway Config | `lyraprint/gateway/gateway.config.json` | Channel routing, auth, LLM config (Fable 5 primary, Opus 4.8 fallback) |
 | Order Schema | `lyraprint/order.schema.json` | JSON Schema for print orders |
 
 **Tested and verified:**

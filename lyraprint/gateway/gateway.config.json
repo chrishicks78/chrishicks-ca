@@ -20,9 +20,10 @@
 
   "llm": {
     "provider": "anthropic",
-    "model": "claude-opus-4-6",
-    "maxTokens": 4096,
-    "temperature": 0.3,
+    "model": "claude-fable-5",
+    "fallbackModel": "claude-opus-4-8",
+    "maxTokens": 16000,
+    "effort": "high",
     "systemPromptSource": "nova-bridge"
   },
 

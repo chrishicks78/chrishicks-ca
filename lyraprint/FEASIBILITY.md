@@ -31,7 +31,7 @@ provides the execution and channel reach.
 | **License** | MIT — fully free, no vendor lock-in |
 | **GitHub Stars** | 247,000+ |
 | **Architecture** | Local-first, Gateway API on localhost:18789 |
-| **LLM Support** | Claude (Anthropic), GPT (OpenAI), DeepSeek, any OpenRouter model |
+| **LLM Support** | Claude (Anthropic), GPT (OpenAI), Gemini (Google), DeepSeek, any OpenRouter model |
 | **Messaging** | WhatsApp, Telegram, Slack, Discord, Signal, iMessage, Teams, IRC, Matrix, Google Chat, LINE, Feishu, Mattermost |
 | **Extension Model** | Skills (SKILL.md), Plugins (TS/JS), Webhooks |
 | **Marketplace** | Claw Hub — 3,286+ verified skills |
@@ -108,10 +108,25 @@ LyraPrint is the new standard platform combining:
 
 ### 5.3 Cost Feasibility — HIGH
 
+**Current frontier model landscape (June 2026):**
+
+| Model | ID | Context | Pricing (in/out per MTok) | Notes |
+|-------|-----|---------|---------------------------|-------|
+| Claude Fable 5 | `claude-fable-5` | 1M | $10 / $50 | Anthropic's most capable model; always-on adaptive thinking; **primary for LyraPrint** |
+| Claude Opus 4.8 | `claude-opus-4-8` | 1M | $5 / $25 | Recommended default Opus tier; **fallback model** |
+| GPT-5.5 | `gpt-5.5` | — | $5 / $30 | OpenAI flagship (April 2026); Responses API |
+| Gemini 3.5 Flash | `gemini-3.5-flash` | 1M | low-cost tier | Google (May 2026, GA); Gemini 3.5 Pro not yet in API |
+
+Fable 5 specifics that affect the integration: thinking is always on (omit the
+`thinking` param), sampling parameters (`temperature`/`top_p`/`top_k`) are
+rejected with a 400, a new tokenizer uses ~30% more tokens than Opus-tier,
+safety classifiers can return `stop_reason: "refusal"` (fall back to Opus 4.8),
+and 30-day data retention is required. The gateway config reflects all of this.
+
 | Item | Cost |
 |------|------|
 | OpenClaw software | $0 (MIT license) |
-| Claude API usage | Pay-per-token (Anthropic pricing) |
+| Claude API usage | Pay-per-token (Fable 5: $10/$50 per MTok; Opus 4.8 fallback: $5/$25) |
 | Hosting (Gateway) | $0 (runs on existing machine) |
 | Development effort | ~40-60 hours for MVP |
 | Maintenance | Low — skills are text files, not compiled code |
