@@ -16,10 +16,19 @@ const nova = new NovaConnector(
 const orders = new OrderStore(path.resolve(__dirname, config.database.path));
 
 function generateOrderId() {
-  const d = new Date();
-  const date = d.toISOString().slice(0, 10).replace(/-/g, '');
-  const seq = String(Math.floor(Math.random() * 9999) + 1).padStart(4, '0');
-  return `LP-${date}-${seq}`;
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  // Sequential per day: scan existing IDs for today's highest sequence number
+  // so restarts and concurrent saves can't silently reuse an ID.
+  let maxSeq = 0;
+  for (const order of orders.list()) {
+    const m = order.orderId.match(new RegExp(`^LP-${date}-(\\d{4})$`));
+    if (m) maxSeq = Math.max(maxSeq, parseInt(m[1], 10));
+  }
+  const id = `LP-${date}-${String(maxSeq + 1).padStart(4, '0')}`;
+  if (orders.get(id)) {
+    throw new Error(`Order ID collision: ${id}`);
+  }
+  return id;
 }
 
 function parseBody(req) {
