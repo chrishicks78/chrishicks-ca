@@ -42,11 +42,18 @@ function json(res, status, data) {
   res.end(JSON.stringify(data));
 }
 
+const AUTH_TOKEN = process.env[config.auth.tokenEnvVar];
+if (!AUTH_TOKEN) {
+  console.error(
+    `Fatal: ${config.auth.tokenEnvVar} is not set. ` +
+    'The gateway requires a bearer token and will not start without one.'
+  );
+  process.exit(1);
+}
+
 function authenticate(req) {
-  const token = process.env[config.auth.tokenEnvVar];
-  if (!token) return true;
   const header = req.headers.authorization || '';
-  return header === `Bearer ${token}`;
+  return header === `Bearer ${AUTH_TOKEN}`;
 }
 
 const routes = {
