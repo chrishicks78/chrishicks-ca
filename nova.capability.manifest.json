@@ -1,7 +1,7 @@
 {
   "$schema": "https://chrishicks.ca/schemas/nova.capability.manifest.schema.json",
   "meta": {
-    "version": "0.1.0",
+    "version": "0.2.0",
     "protocolRange": "^2.2",
     "date": null
   },
@@ -27,9 +27,9 @@
     ]
   },
   "platform": {
-    "provider": "OpenAI",
-    "model": "gpt-4o-mini",
-    "visionTokensSupported": false
+    "provider": "Anthropic",
+    "model": "claude-opus-4-6",
+    "visionTokensSupported": true
   },
   "bindings": {
     "IMemoryCompressor": "ocm_image_ocr",

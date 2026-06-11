@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chrishicks.ca/schemas/lyraprint.order.schema.json",
+  "title": "LyraPrint Order",
+  "description": "Schema for print orders managed by the LyraPrint system.",
+  "type": "object",
+  "required": ["orderId", "status", "customer", "items", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "orderId": {
+      "description": "Unique order identifier (format: LP-YYYYMMDD-XXXX).",
+      "type": "string",
+      "pattern": "^LP-[0-9]{8}-[0-9]{4}$"
+    },
+    "status": {
+      "description": "Current order status in the production pipeline.",
+      "type": "string",
+      "enum": [
+        "received",
+        "designing",
+        "proofing",
+        "approved",
+        "printing",
+        "finishing",
+        "shipped",
+        "delivered",
+        "cancelled"
+      ]
+    },
+    "customer": {
+      "description": "Customer contact information.",
+      "type": "object",
+      "required": ["name", "channel"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "email": { "type": ["string", "null"], "format": "email" },
+        "phone": { "type": ["string", "null"] },
+        "channel": {
+          "description": "Messaging channel the customer used to place the order.",
+          "type": "string",
+          "enum": ["whatsapp", "telegram", "discord", "slack", "web", "email"]
+        }
+      }
+    },
+    "items": {
+      "description": "Line items in the order.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["product", "quantity"],
+        "additionalProperties": false,
+        "properties": {
+          "product": {
+            "description": "Product type (e.g. 'business-cards', 'poster', 'banner').",
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "dimensions": {
+            "description": "Print dimensions as 'WxH' with unit (e.g. '8.5x11in').",
+            "type": ["string", "null"]
+          },
+          "material": {
+            "type": ["string", "null"]
+          },
+          "finish": {
+            "type": ["string", "null"],
+            "enum": ["matte", "gloss", "uv-coating", null]
+          },
+          "designFileRef": {
+            "description": "Path or ID of the uploaded design file.",
+            "type": ["string", "null"]
+          }
+        }
+      }
+    },
+    "quote": {
+      "description": "Pricing breakdown in CAD.",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "subtotal": { "type": "number", "minimum": 0 },
+        "finishSurcharge": { "type": "number", "minimum": 0 },
+        "rushFee": { "type": "number", "minimum": 0 },
+        "total": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string", "const": "CAD" }
+      }
+    },
+    "proof": {
+      "description": "Proofing workflow state.",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "sentAt": { "type": ["string", "null"], "format": "date-time" },
+        "approvedAt": { "type": ["string", "null"], "format": "date-time" },
+        "approvedVia": {
+          "type": ["string", "null"],
+          "enum": ["whatsapp", "telegram", "discord", "slack", "web", "email", null]
+        }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "estimatedDelivery": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "notes": {
+      "type": ["string", "null"]
+    }
+  }
+}
